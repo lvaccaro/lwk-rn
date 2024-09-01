@@ -7,3 +7,5 @@ require "#{ws_dir}/node_modules/react-native-test-app/test_app.rb"
 workspace 'LwkRnExample.xcworkspace'
 
 use_test_app!
+
+config = use_native_modules!
