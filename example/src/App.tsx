@@ -16,12 +16,14 @@ export default function App() {
         network,
         mnemonic
       );
-      //const txt = await descriptor.asString();
+      const descriptorString = await descriptor.asString();
+      console.log('Your descriptor ' + descriptorString);
       const wollet = await new Wollet().create(network, descriptor, '');
       const client = await new Client().defaultElectrumClient(network);
       const update = await client.fullScan(wollet);
       await wollet.applyUpdate(update);
       const txs = await wollet.getTransactions();
+      console.log('Your have ' + txs + ' txs');
 
       setResult(txs.length.toString());
     }
