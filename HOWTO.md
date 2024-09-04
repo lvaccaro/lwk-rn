@@ -134,8 +134,8 @@ RCT_EXTERN_METHOD(multiply:(float)a b:(float)b
 
 Lwk-rn extends the interface with all the prototypes of functions which required to be exported, defined in `LWKRnModule.swift`.
 For the preivos declarated function the interface is the following
-```c
 
+```c
 RCT_EXTERN_METHOD(
     createDescriptor: (nonnull NSString)descriptor
     resolve: (RCTPromiseResolveBlock)resolve
