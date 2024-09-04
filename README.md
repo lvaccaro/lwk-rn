@@ -55,7 +55,7 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 
 ## HOWTO
 
-See the [howto](HOWTO.md) to learn how works lwk-rn react native module and the repo code.
+See the [how-to](HOW-TO.md) to learn how works lwk-rn react native module and the repo code.
 
 ## License
 
