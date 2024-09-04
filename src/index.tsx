@@ -1,4 +1,3 @@
-
 import { Descriptor } from './classes/Descriptor';
 import { Client } from './classes/Client';
 import { Wollet } from './classes/Wollet';
@@ -10,5 +9,5 @@ export {
   Network,
   Wollet,
   ClientNames,
-  type ElectrumClientConfig
-}
+  type ElectrumClientConfig,
+};
