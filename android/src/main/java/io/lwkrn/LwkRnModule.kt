@@ -5,11 +5,13 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import lwk.Address
 import lwk.ElectrumClient
 import lwk.Mnemonic
 import lwk.Pset
 import lwk.Signer
 import lwk.Transaction
+import lwk.TxBuilder
 import lwk.Update
 import lwk.WalletTx
 import lwk.Wollet
@@ -30,6 +32,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   private var _transactions = mutableMapOf<String, Transaction>()
   private var _psets = mutableMapOf<String, Pset>()
   private var _signers = mutableMapOf<String, Signer>()
+  private var _txBuilders = mutableMapOf<String, TxBuilder>()
 
   /* Descriptor */
 
@@ -334,6 +337,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       result.reject("Pset toString error", error.localizedMessage, error)
     }
   }
+
   fun psetExtractTx(psetId: String, result: Promise) {
     try {
       val id = randomId()
@@ -342,6 +346,92 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       result.resolve(id)
     } catch (error: Throwable) {
       result.reject("Pset extractTx error", error.localizedMessage, error)
+    }
+  }
+
+  /* TxBuilder */
+  @ReactMethod
+  fun createTxBuilder(
+    network: String, result: Promise
+  ) {
+    try {
+      val id = randomId()
+      val networkObj = setNetwork(network)
+      _txBuilders[id] = networkObj.txBuilder()
+      result.resolve(id)
+    } catch (error: Throwable) {
+      return result.reject("TxBuilder create error", error.localizedMessage, error)
+    }
+  }
+
+  fun txBuilderAddBurn(id: String, satoshi: ULong, asset: String, result: Promise) {
+    try {
+      _txBuilders[id]!!.addBurn(satoshi, asset)
+      result.resolve(null)
+    } catch (error: Throwable) {
+      result.reject("TxBuilder addBurn error", error.localizedMessage, error)
+    }
+  }
+
+  fun txBuilderAddLbtcRecipient(id: String, address: String, satoshi: ULong, result: Promise) {
+    try {
+      _txBuilders[id]!!.addLbtcRecipient(Address(address), satoshi)
+      result.resolve(null)
+    } catch (error: Throwable) {
+      result.reject("TxBuilder addLbtcRecipient error", error.localizedMessage, error)
+    }
+  }
+
+  fun txBuilderAddRecipient(
+    id: String,
+    address: String,
+    satoshi: ULong,
+    asset: String,
+    result: Promise
+  ) {
+    try {
+      _txBuilders[id]!!.addRecipient(Address(address), satoshi, asset)
+      result.resolve(null)
+    } catch (error: Throwable) {
+      result.reject("TxBuilder addRecipient error", error.localizedMessage, error)
+    }
+  }
+
+  fun txBuilderDrainLbtcTo(id: String, address: String, result: Promise) {
+    try {
+      _txBuilders[id]!!.drainLbtcTo(Address(address))
+      result.resolve(null)
+    } catch (error: Throwable) {
+      result.reject("TxBuilder drainLbtcTo error", error.localizedMessage, error)
+    }
+  }
+
+  fun txBuilderDrainLbtcWallet(id: String, result: Promise) {
+    try {
+      _txBuilders[id]!!.drainLbtcWallet()
+      result.resolve(null)
+    } catch (error: Throwable) {
+      result.reject("TxBuilder drainLbtcWallet error", error.localizedMessage, error)
+    }
+  }
+
+  fun txBuilderFeeRate(id: String, rate: Float, result: Promise) {
+    try {
+      _txBuilders[id]!!.feeRate(rate)
+      result.resolve(null)
+    } catch (error: Throwable) {
+      result.reject("TxBuilder feeRate error", error.localizedMessage, error)
+    }
+  }
+
+  fun txBuilderFinish(id: String, wolletId: String, result: Promise) {
+    try {
+      val id = randomId()
+      val wollet = _wollets[wolletId]
+      _psets[id] = _txBuilders[id]!!.finish(wollet!!)
+      result.resolve(id)
+    } catch (error: Throwable) {
+      result.reject("TxBuilder finish error", error.localizedMessage, error)
     }
   }
 }

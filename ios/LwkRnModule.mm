@@ -2,7 +2,7 @@
 
 
 @interface RCT_EXTERN_MODULE(LwkRnModule, NSObject)
-    
+
     /** Signers Methods */
     RCT_EXTERN_METHOD(
                       createSigner: (nonnull NSString)mnemonic
@@ -104,7 +104,7 @@
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )
-
+    
     /** Transactions Methods */
     RCT_EXTERN_METHOD(
                       createTransaction: (nonnull NSString)string
@@ -139,11 +139,64 @@
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )
-
+    
+    /** TxBuilder Methods */
+    RCT_EXTERN_METHOD(
+                      createTxBuilder: (nonnull NSString)network
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
+                      txBuilderAddBurn: (nonnull NSString)id
+                      satoshi: (nonnull UInt64)satoshi
+                      asset: (nonnull NSString)asset
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
+                      txBuilderAddLbtcRecipient: (nonnull NSString)id
+                      address: (nonnull NSString)address
+                      satoshi: (nonnull UInt64)satoshi
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
+                      txBuilderAddRecipient: (nonnull NSString)id
+                      address: (nonnull NSString)address
+                      satoshi: (nonnull UInt64)satoshi
+                      asset: (nonnull NSString)asset
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
+                      txBuilderDrainLbtcTo: (nonnull NSString)id
+                      address: (nonnull NSString)address
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
+                      txBuilderLbtcWallet: (nonnull NSString)id
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
+                      txBuilderFeeRate: (nonnull NSString)id
+                      rate: (NSNumber)rate
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    
+    RCT_EXTERN_METHOD(
+                      txBuilderFinish: (nonnull NSString)id
+                      wolletId: (nonnull NSNumber)wolletId
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    
     + (BOOL)requiresMainQueueSetup
     {
         return NO;
     }
-
+    
 @end
-
+    

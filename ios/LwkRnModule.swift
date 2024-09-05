@@ -13,6 +13,7 @@ class LwkRnModule: NSObject {
     var _transactions: [String: Transaction] = [:]
     var _addresses: [String: Address] = [:]
     var _psets: [String: Pset] = [:]
+    var _txBuilders: [String: TxBuilder] = [:]
     
     
     /* WolletDescriptor */
@@ -327,9 +328,9 @@ class LwkRnModule: NSObject {
     }
     @objc
     func txAsString(_
-              txId: String,
-              resolve: RCTPromiseResolveBlock,
-              reject: RCTPromiseRejectBlock
+                    txId: String,
+                    resolve: RCTPromiseResolveBlock,
+                    reject: RCTPromiseRejectBlock
     ) -> Void {
         let tx = _transactions[txId]
         resolve(tx?.description)
@@ -344,12 +345,12 @@ class LwkRnModule: NSObject {
     ) -> Void {
         resolve(_psets[psetId]!.description)
     }
-
+    
     @objc
     func psetExtractTx(_
-                      psetId: String,
-                      resolve: RCTPromiseResolveBlock,
-                      reject: RCTPromiseRejectBlock
+                       psetId: String,
+                       resolve: RCTPromiseResolveBlock,
+                       reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
             let id = randomId()
@@ -358,6 +359,125 @@ class LwkRnModule: NSObject {
             resolve(id)
         } catch {
             reject("Pset extractTx error", error.localizedDescription, error)
+        }
+    }
+    
+    /* TxBuilder */
+    
+    @objc
+    func createTxBuilder(_
+                         network: String,
+                         resolve: RCTPromiseResolveBlock,
+                         reject: RCTPromiseRejectBlock
+    ) -> Void {
+        let id = randomId()
+        let network = setNetwork(networkStr: network)
+        _txBuilders[id] = network.txBuilder()
+        resolve(id)
+    }
+    
+    @objc
+    func txBuilderAddBurn(_
+                          id: String,
+                          satoshi: UInt64,
+                          asset: String,
+                          resolve: RCTPromiseResolveBlock,
+                          reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            try _txBuilders[id]?.addBurn(satoshi: satoshi, asset: asset)
+            resolve(nil)
+        } catch {
+            reject("TxBuilder addBurn error", error.localizedDescription, error)
+        }
+    }
+    @objc
+    func txBuilderLbtcRecipient(_
+                                id: String,
+                                address: String,
+                                satoshi: UInt64,
+                                resolve: RCTPromiseResolveBlock,
+                                reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            try _txBuilders[id]?.addLbtcRecipient(address: Address(s: address), satoshi: satoshi)
+            resolve(nil)
+        } catch {
+            reject("TxBuilder addLbtcRecipient error", error.localizedDescription, error)
+        }
+    }
+    @objc
+    func txBuilderAddRecipient(_
+                               id: String,
+                               address: String,
+                               satoshi: UInt64,
+                               asset: String,
+                               resolve: RCTPromiseResolveBlock,
+                               reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            try _txBuilders[id]?.addRecipient(address: Address(s: address), satoshi: satoshi, asset: asset)
+            resolve(nil)
+        } catch {
+            reject("TxBuilder addRecipient error", error.localizedDescription, error)
+        }
+    }
+    @objc
+    func txBuilderDrainLbtcTo(_
+                              id: String,
+                              address: String,
+                              resolve: RCTPromiseResolveBlock,
+                              reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            try _txBuilders[id]?.drainLbtcTo(address: Address(s: address))
+            resolve(nil)
+        } catch {
+            reject("TxBuilder drainLbtcTo error", error.localizedDescription, error)
+        }
+    }
+    @objc
+    func txBuilderDrainLbtcWallet(_
+                                  id: String,
+                                  resolve: RCTPromiseResolveBlock,
+                                  reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            try _txBuilders[id]?.drainLbtcWallet()
+            resolve(nil)
+        } catch {
+            reject("TxBuilder drainLbtcWallet error", error.localizedDescription, error)
+        }
+    }
+    @objc
+    func txBuilderFeeRate(_
+                          id: String,
+                          rate: NSNumber,
+                          resolve: RCTPromiseResolveBlock,
+                          reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            try _txBuilders[id]?.feeRate(rate: rate.floatValue)
+            resolve(nil)
+        } catch {
+            reject("TxBuilder feeRate error", error.localizedDescription, error)
+        }
+    }
+    @objc
+    func txBuilderFinish(_
+                         id: String,
+                         wolletId: String,
+                         resolve: RCTPromiseResolveBlock,
+                         reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            let id = randomId()
+            let wollet = _wollets[wolletId]
+            let txBuilder = _txBuilders[id]
+            _psets[id] = try txBuilder!.finish(wollet: wollet!)
+            resolve(id)
+        } catch {
+            reject("TxBuilder finish error", error.localizedDescription, error)
         }
     }
     

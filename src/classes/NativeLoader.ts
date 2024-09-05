@@ -50,6 +50,21 @@ export interface NativeLwk {
   // Pset
   psetAsString(psetId: string): string;
   psetExtractTx(psetId: string): string;
+
+  // TxBuilder
+  createTxBuilder(network: string): string;
+  txBuilderAddBurn(id: string, satoshi: number, asset: string): null;
+  txBuilderAddLbtcRecipient(id: string, address: string, satoshi: number): null;
+  txBuilderAddRecipient(
+    id: string,
+    address: string,
+    satoshi: number,
+    asset: string
+  ): null;
+  txBuilderDrainLbtcTo(id: string, address: string): null;
+  txBuilderDrainLbtcWallet(id: string): null;
+  txBuilderFeeRate(id: string, rate: number | null): null;
+  txBuilderFinish(id: string, wolletId: string): string;
 }
 
 export class NativeLoader {
