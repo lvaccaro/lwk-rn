@@ -27,27 +27,44 @@ yarn add lwk-rn
 npx pod-install
 or
 cd ios && pod install
-
+```
 
 ### Examples
 
-### Create a Wallet & sync the txs of a descriptor
-
+Create a Wallet and sync with Electrum client
 
 ```js
-const mnemonic = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
+import { Wollet, Client, Signer, Network } from 'lwk-rn';
+
+const mnemonic =
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
 const network = Network.Testnet;
-const descriptor = await new Descriptor().createDescriptorSecret(network, mnemonic);
-const descriptorString = await descriptor.asString();
-console.log('Your descriptor ' + descriptorString);
-const wollet = await new Wollet().create(network, descriptor, '');
+const signer = await new Signer().create(mnemonic, network);
+const descriptor = await signer.wpkhSlip77Descriptor();
+console.log(await descriptor.asString());
+const wollet = await new Wollet().create(network, descriptor, null);
 const client = await new Client().defaultElectrumClient(network);
 const update = await client.fullScan(wollet);
 await wollet.applyUpdate(update);
-onst txs = await wollet.getTransactions();
-console.log('Your have ' + txs + ' txs');
 ```
 
+Get a new address:
+```js
+const address = await wollet.getAddress();
+console.log(address);
+```
+
+Get a transaction list:
+```js
+const address = await wollet.getTransactions();
+console.log(address);
+```
+
+Get balance as `[AssetId : UInt64]`:
+```js
+const balance = await wollet.getBalance();
+console.log(balance);
+```
 
 ## Contributing
 

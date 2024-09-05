@@ -13,6 +13,8 @@ export default function App() {
       const network = Network.Testnet;
       const signer = await new Signer().create(mnemonic, network);
       const descriptor = await signer.wpkhSlip77Descriptor();
+      console.log(await descriptor.asString());
+
       const wollet = await new Wollet().create(network, descriptor, null);
       const client = await new Client().defaultElectrumClient(network);
       const update = await client.fullScan(wollet);
