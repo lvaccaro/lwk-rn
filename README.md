@@ -31,6 +31,13 @@ cd ios && pod install
 
 ### Examples
 
+You could run the example in iOS or android by the following
+```sh
+$ yarn example ios
+...
+$ yarn example android
+```
+
 Create a Wallet and sync with Electrum client
 
 ```js
@@ -42,6 +49,7 @@ const network = Network.Testnet;
 const signer = await new Signer().create(mnemonic, network);
 const descriptor = await signer.wpkhSlip77Descriptor();
 console.log(await descriptor.asString());
+
 const wollet = await new Wollet().create(network, descriptor, null);
 const client = await new Client().defaultElectrumClient(network);
 const update = await client.fullScan(wollet);
