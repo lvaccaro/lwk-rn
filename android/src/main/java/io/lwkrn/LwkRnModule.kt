@@ -278,6 +278,51 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  /* Transaction */
+
+  @ReactMethod
+  fun createTransaction(
+    hex: String, result: Promise
+  ) {
+    try {
+      val id = randomId()
+      _transactions[id] = Transaction(hex)
+      result.resolve(id)
+    } catch (error: Throwable) {
+      return result.reject("Transaction create error", error.localizedMessage, error)
+    }
+  }
+
+  @ReactMethod
+  fun txId(txId: String, result: Promise) {
+    try {
+      val tx = _transactions[txId]
+      result.resolve(tx!!.txid().toString())
+    } catch (error: Throwable) {
+      result.reject("Transaction toString error", error.localizedMessage, error)
+    }
+  }
+
+  @ReactMethod
+  fun txFee(txId: String, policyAsset: String, result: Promise) {
+    try {
+      val tx = _transactions[txId]
+      result.resolve(tx!!.fee(policyAsset).toString())
+    } catch (error: Throwable) {
+      result.reject("Transaction toString error", error.localizedMessage, error)
+    }
+  }
+
+  @ReactMethod
+  fun txAsString(txId: String, result: Promise) {
+    try {
+      val tx = _transactions[txId]
+      result.resolve(tx.toString())
+    } catch (error: Throwable) {
+      result.reject("Transaction toString error", error.localizedMessage, error)
+    }
+  }
+
   /* Pset */
 
   @ReactMethod

@@ -3,9 +3,10 @@ import {
   type EsploraClientConfig,
 } from '../lib/interfaces';
 import { ClientNames, Network } from '../lib/enums';
-import { type Update, type Transaction } from '../lib/types';
+import { type Update } from '../lib/types';
 import { NativeLoader } from './NativeLoader';
 import type { Wollet } from './Wollet';
+import type { Transaction } from './Transaction';
 
 export class Client extends NativeLoader {
   id: string = '';

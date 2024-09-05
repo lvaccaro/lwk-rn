@@ -288,12 +288,59 @@ class LwkRnModule: NSObject {
             reject("Wollet finalize error", error.localizedDescription, error)
         }
     }
-
+    
+    /* Transaction */
+    @objc
+    func createTransaction(_
+                           hex: String,
+                           resolve: RCTPromiseResolveBlock,
+                           reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            let id = randomId()
+            _transactions[id] = try Transaction(hex: hex)
+            resolve(id)
+        } catch {
+            reject("Transaction create error", error.localizedDescription, error)
+        }
+    }
+    
+    @objc
+    func txId(_
+              txId: String,
+              resolve: RCTPromiseResolveBlock,
+              reject: RCTPromiseRejectBlock
+    ) -> Void {
+        let tx = _transactions[txId]
+        resolve(tx?.txid().description)
+    }
+    
+    @objc
+    func txFee(_
+               txId: String,
+               policyAsset: String,
+               resolve: RCTPromiseResolveBlock,
+               reject: RCTPromiseRejectBlock
+    ) -> Void {
+        let tx = _transactions[txId]
+        resolve(tx?.fee(policyAsset: policyAsset))
+    }
+    @objc
+    func txAsString(_
+              txId: String,
+              resolve: RCTPromiseResolveBlock,
+              reject: RCTPromiseRejectBlock
+    ) -> Void {
+        let tx = _transactions[txId]
+        resolve(tx?.description)
+    }    
+    
+    /* Pset */
     @objc
     func psetAsString(_
-                  psetId: String,
-                  resolve: RCTPromiseResolveBlock,
-                  reject: RCTPromiseRejectBlock
+                      psetId: String,
+                      resolve: RCTPromiseResolveBlock,
+                      reject: RCTPromiseRejectBlock
     ) -> Void {
         resolve(_psets[psetId]!.description)
     }

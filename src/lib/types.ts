@@ -14,13 +14,6 @@ export type WolletTx = {
 
 export type Update  = string;
 
-export class Transaction {
-  id: string;
-  constructor(id: string) {
-    this.id = id
-  }
-}
-
 export type Address = {
   description: string;
   is_blinded: string;

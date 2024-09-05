@@ -104,6 +104,29 @@
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )
+
+    /** Transactions Methods */
+    RCT_EXTERN_METHOD(
+                      createTransaction: (nonnull NSString)string
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
+                      txId: (nonnull NSString)string
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
+                      txFee: (nonnull NSString)string
+                      policyAsset: (nonnull NSString)string
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
+                      txAsString: (nonnull NSString)string
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
     
     /** Pset Methods */
     RCT_EXTERN_METHOD(

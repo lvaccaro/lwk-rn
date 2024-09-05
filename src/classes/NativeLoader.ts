@@ -41,6 +41,12 @@ export interface NativeLwk {
   getAddress(wolletId: string, index: number | null): Address;
   finalize(wolletId: string, psetId: string): string;
 
+  // Transaction
+  createTransaction(hex: string): string;
+  txId(txId: string): string;
+  txFee(txId: string, policyAsset: string): number;
+  txAsString(txId: string): string;
+
   // Pset
   psetAsString(psetId: string): string;
 }
