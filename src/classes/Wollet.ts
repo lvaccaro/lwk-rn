@@ -38,7 +38,7 @@ export class Wollet extends NativeLoader {
     return await this._lwk.getBalance(this.id);
   }
 
-  async finalized(pset: Pset): Promise<Pset> {
+  async finalize(pset: Pset): Promise<Pset> {
     let newPsetId = await this._lwk.finalize(this.id, pset.id);
     return new Pset().from(newPsetId);
   }

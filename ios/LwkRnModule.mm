@@ -148,7 +148,7 @@
                       )
     RCT_EXTERN_METHOD(
                       txBuilderAddBurn: (nonnull NSString)id
-                      satoshi: (nonnull UInt64)satoshi
+                      satoshi: (nonnull NSNumber)satoshi
                       asset: (nonnull NSString)asset
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
@@ -156,14 +156,14 @@
     RCT_EXTERN_METHOD(
                       txBuilderAddLbtcRecipient: (nonnull NSString)id
                       address: (nonnull NSString)address
-                      satoshi: (nonnull UInt64)satoshi
+                      satoshi: (nonnull NSNumber)satoshi
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )
     RCT_EXTERN_METHOD(
                       txBuilderAddRecipient: (nonnull NSString)id
                       address: (nonnull NSString)address
-                      satoshi: (nonnull UInt64)satoshi
+                      satoshi: (nonnull NSNumber)satoshi
                       asset: (nonnull NSString)asset
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
@@ -181,14 +181,14 @@
                       )
     RCT_EXTERN_METHOD(
                       txBuilderFeeRate: (nonnull NSString)id
-                      rate: (NSNumber)rate
+                      rate: (nonnull NSNumber)rate
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )
     
     RCT_EXTERN_METHOD(
                       txBuilderFinish: (nonnull NSString)id
-                      wolletId: (nonnull NSNumber)wolletId
+                      wolletId: (nonnull NSString)wolletId
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )

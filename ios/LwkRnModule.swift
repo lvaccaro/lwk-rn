@@ -379,28 +379,28 @@ class LwkRnModule: NSObject {
     @objc
     func txBuilderAddBurn(_
                           id: String,
-                          satoshi: UInt64,
+                          satoshi: NSNumber,
                           asset: String,
                           resolve: RCTPromiseResolveBlock,
                           reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
-            try _txBuilders[id]?.addBurn(satoshi: satoshi, asset: asset)
+            try _txBuilders[id]?.addBurn(satoshi: satoshi.uint64Value, asset: asset)
             resolve(nil)
         } catch {
             reject("TxBuilder addBurn error", error.localizedDescription, error)
         }
     }
     @objc
-    func txBuilderLbtcRecipient(_
+    func txBuilderAddLbtcRecipient(_
                                 id: String,
                                 address: String,
-                                satoshi: UInt64,
+                                satoshi: NSNumber,
                                 resolve: RCTPromiseResolveBlock,
                                 reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
-            try _txBuilders[id]?.addLbtcRecipient(address: Address(s: address), satoshi: satoshi)
+            try _txBuilders[id]?.addLbtcRecipient(address: Address(s: address), satoshi: satoshi.uint64Value)
             resolve(nil)
         } catch {
             reject("TxBuilder addLbtcRecipient error", error.localizedDescription, error)
@@ -410,13 +410,13 @@ class LwkRnModule: NSObject {
     func txBuilderAddRecipient(_
                                id: String,
                                address: String,
-                               satoshi: UInt64,
+                               satoshi: NSNumber,
                                asset: String,
                                resolve: RCTPromiseResolveBlock,
                                reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
-            try _txBuilders[id]?.addRecipient(address: Address(s: address), satoshi: satoshi, asset: asset)
+            try _txBuilders[id]?.addRecipient(address: Address(s: address), satoshi: satoshi.uint64Value, asset: asset)
             resolve(nil)
         } catch {
             reject("TxBuilder addRecipient error", error.localizedDescription, error)

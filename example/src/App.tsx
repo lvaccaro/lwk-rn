@@ -31,7 +31,20 @@ export default function App() {
       const balance = await wollet.getBalance();
       console.log('Get balance');
       console.log(balance);
-
+      /*
+      const out_address = address.description;
+      const satoshis = 900;
+      const fee_rate = 280; // this seems like absolute fees
+      const builder = await new TxBuilder().create(network);
+      await builder.addLbtcRecipient(out_address, satoshis);
+      await builder.feeRate(fee_rate);
+      let pset = await builder.finish(wollet);
+      let signed_pset = await signer.sign(pset);
+      let finalized_pset = await wollet.finalize(signed_pset);
+      const tx = await finalized_pset.extractTx();
+      await client.broadcast(tx);
+      console.log('BROADCASTED TX!\nTXID: {:?}', tx.txId.toString());
+*/
       setResult(txs.length.toString());
     }
 

@@ -74,6 +74,21 @@ const balance = await wollet.getBalance();
 console.log(balance);
 ```
 
+Build, sign and broadcast a Transaction:
+```js
+    const out_address = await wollet.getAddress().description;
+    const satoshis = 900;
+    const fee_rate = 280; // this seems like absolute fees
+    const builder = await new TxBuilder().create(network);
+    await builder.addLbtcRecipient(out_address, satoshis);
+    await builder.feeRate(fee_rate);
+    let pset = await builder.finish(wollet);
+    let signed_pset = await signer.sign(pset);
+    let finalized_pset = await wollet.finalize(signed_pset);
+    const tx = await finalized_pset.extractTx();
+    await client.broadcast(tx);
+    console.log("BROADCASTED TX!\nTXID: {:?}", tx.txId.toString());
+```
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
