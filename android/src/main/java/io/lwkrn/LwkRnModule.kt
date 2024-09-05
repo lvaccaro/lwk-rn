@@ -334,4 +334,14 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       result.reject("Pset toString error", error.localizedMessage, error)
     }
   }
+  fun psetExtractTx(psetId: String, result: Promise) {
+    try {
+      val id = randomId()
+      val pset = _psets[psetId]
+      _transactions[id] = pset!!.extractTx()
+      result.resolve(id)
+    } catch (error: Throwable) {
+      result.reject("Pset extractTx error", error.localizedMessage, error)
+    }
+  }
 }

@@ -49,6 +49,7 @@ export interface NativeLwk {
 
   // Pset
   psetAsString(psetId: string): string;
+  psetExtractTx(psetId: string): string;
 }
 
 export class NativeLoader {

@@ -134,6 +134,11 @@
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )
+    RCT_EXTERN_METHOD(
+                      psetExtractTx: (nonnull NSString)psetId
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
 
     + (BOOL)requiresMainQueueSetup
     {

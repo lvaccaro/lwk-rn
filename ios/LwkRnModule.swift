@@ -344,5 +344,21 @@ class LwkRnModule: NSObject {
     ) -> Void {
         resolve(_psets[psetId]!.description)
     }
+
+    @objc
+    func psetExtractTx(_
+                      psetId: String,
+                      resolve: RCTPromiseResolveBlock,
+                      reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            let id = randomId()
+            let pset = _psets[psetId]
+            _transactions[id] = try pset!.extractTx()
+            resolve(id)
+        } catch {
+            reject("Pset extractTx error", error.localizedDescription, error)
+        }
+    }
     
 }
