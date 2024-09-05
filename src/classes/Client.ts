@@ -1,10 +1,9 @@
 import {
   type ElectrumClientConfig,
   type EsploraClientConfig,
-  ClientNames,
-  Network,
-} from '../lib/enums';
-import { type Update } from '../lib/bindings';
+} from '../lib/interfaces';
+import { ClientNames, Network } from '../lib/enums';
+import { type Update, type Transaction } from '../lib/types';
 import { NativeLoader } from './NativeLoader';
 import type { Wollet } from './Wollet';
 
@@ -37,5 +36,9 @@ export class Client extends NativeLoader {
 
   async fullScan(wollet: Wollet): Promise<Update> {
     return await this._lwk.fullScan(wollet.id, this.id);
+  }
+
+  async broadcast(tx: Transaction): Promise<string> {
+    return await this._lwk.broadcast(this.id, tx.id);
   }
 }

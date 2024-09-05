@@ -1,42 +1,37 @@
 package io.lwkrn
 
-import com.facebook.react.bridge.*
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReactContextBaseJavaModule
+import com.facebook.react.bridge.ReactMethod
 import lwk.ElectrumClient
 import lwk.Mnemonic
+import lwk.Pset
 import lwk.Signer
+import lwk.Transaction
 import lwk.Update
 import lwk.WalletTx
 import lwk.Wollet
 import lwk.WolletDescriptor
 
 class LwkRnModule(reactContext: ReactApplicationContext) :
-    ReactContextBaseJavaModule(reactContext) {
-    override fun getName() = "LwkRnModule"
-    override fun getConstants(): MutableMap<String, Any> {
-        return hashMapOf("count" to 1)
-    }
+  ReactContextBaseJavaModule(reactContext) {
+  override fun getName() = "LwkRnModule"
+  override fun getConstants(): MutableMap<String, Any> {
+    return hashMapOf("count" to 1)
+  }
 
-    private var _descriptors = mutableMapOf<String, WolletDescriptor>()
-    private var _electrumClients = mutableMapOf<String, ElectrumClient>()
-    private var _wollets = mutableMapOf<String, Wollet>()
-    private var _updates = mutableMapOf<String, Update>()
-    private var _transactions = mutableMapOf<String, WalletTx>()
+  private var _descriptors = mutableMapOf<String, WolletDescriptor>()
+  private var _electrumClients = mutableMapOf<String, ElectrumClient>()
+  private var _wollets = mutableMapOf<String, Wollet>()
+  private var _updates = mutableMapOf<String, Update>()
+  private var _walletTxs = mutableMapOf<String, WalletTx>()
+  private var _transactions = mutableMapOf<String, Transaction>()
+  private var _psets = mutableMapOf<String, Pset>()
+  private var _signers = mutableMapOf<String, Signer>()
 
-    @ReactMethod
-    fun createDescriptorSecret(
-        network: String, mnemonic: String, result: Promise
-    ) {
-        try {
-          val id = randomId()
-          val mnemonic = Mnemonic(mnemonic)
-          val network = setNetwork(network)
-          val signer = Signer(mnemonic, network)
-          _descriptors[id] = signer.wpkhSlip77Descriptor()
-          result.resolve(id)
-        } catch (error: Throwable) {
-            return result.reject("WolletDescriptor create error", error.localizedMessage, error)
-        }
-    }
+  /* Descriptor */
 
   @ReactMethod
   fun createDescriptor(
@@ -58,6 +53,59 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   ) {
     result.resolve(_descriptors[keyId]!!.toString())
   }
+
+  /* Signer */
+
+  @ReactMethod
+  fun createSigner(
+    mnemonic: String,
+    network: String,
+    result: Promise
+  ) {
+    try {
+      val id = randomId()
+      val mnemonicObj = Mnemonic(mnemonic)
+      val networkObj = setNetwork(network)
+      _signers[id] = Signer(mnemonicObj, networkObj)
+      result.resolve(id)
+    } catch (error: Throwable) {
+      return result.reject("Signer create error", error.localizedMessage, error)
+    }
+  }
+
+  @ReactMethod
+  fun sign(
+    signerId: String,
+    psetId: String,
+    result: Promise
+  ) {
+    try {
+      val id = randomId()
+      val signer = _signers[signerId]
+      val pset = _psets[psetId]
+      _psets[id] = signer!!.sign(pset!!)
+      result.resolve(id)
+    } catch (error: Throwable) {
+      return result.reject("Signer sign error", error.localizedMessage, error)
+    }
+  }
+
+  @ReactMethod
+  fun wpkhSlip77Descriptor(
+    signerId: String,
+    result: Promise
+  ) {
+    try {
+      val id = randomId()
+      val signer = _signers[signerId]
+      _descriptors[id] = signer!!.wpkhSlip77Descriptor()
+      result.resolve(id)
+    } catch (error: Throwable) {
+      return result.reject("Signer wpkhSlip77Descriptor error", error.localizedMessage, error)
+    }
+  }
+
+  /* Electrum client */
 
   @ReactMethod
   fun initElectrumClient(
@@ -82,29 +130,35 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   ) {
     try {
       val id = randomId()
-      val network = setNetwork(network)
-      _electrumClients[id] = network.defaultElectrumClient()
+      val networkObj = setNetwork(network)
+      _electrumClients[id] = networkObj.defaultElectrumClient()
       result.resolve(id)
     } catch (error: Throwable) {
-      return result.reject("ElectrumClient defaultElectrumClient error", error.localizedMessage, error)
+      return result.reject(
+        "ElectrumClient defaultElectrumClient error",
+        error.localizedMessage,
+        error
+      )
     }
   }
 
   @ReactMethod
-  fun createWollet(
-    network: String,
-    descriptorId: String,
-    datadir: String,
+  fun broadcast(
+    clientId: String,
+    txId: String,
     result: Promise
   ) {
     try {
-      val id = randomId()
-      val network = setNetwork(network)
-      val descriptor = _descriptors[descriptorId]
-      _wollets[id] = Wollet(network, descriptor!!, null)
-      result.resolve(id)
+      val client = _electrumClients[clientId]
+      val transaction = _transactions[txId]
+      val txid = client!!.broadcast(transaction!!)
+      result.resolve(txid.toString())
     } catch (error: Throwable) {
-      return result.reject("Wollet create error", error.localizedMessage, error)
+      return result.reject(
+        "ElectrumClient broadcast error",
+        error.localizedMessage,
+        error
+      )
     }
   }
 
@@ -121,7 +175,27 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       _updates[id] = client!!.fullScan(wollet!!)!!
       result.resolve(id)
     } catch (error: Throwable) {
-      return result.reject("Client fullScan error", error.localizedMessage, error)
+      return result.reject("ElectrumClient fullScan error", error.localizedMessage, error)
+    }
+  }
+
+  /* Wollet */
+
+  @ReactMethod
+  fun createWollet(
+    network: String,
+    descriptorId: String,
+    datadir: String,
+    result: Promise
+  ) {
+    try {
+      val id = randomId()
+      val networkObj = setNetwork(network)
+      val descriptor = _descriptors[descriptorId]
+      _wollets[id] = Wollet(networkObj, descriptor!!, datadir)
+      result.resolve(id)
+    } catch (error: Throwable) {
+      return result.reject("Wollet create error", error.localizedMessage, error)
     }
   }
 
@@ -137,7 +211,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       wollet!!.applyUpdate(update!!)
       result.resolve(null)
     } catch (error: Throwable) {
-      return result.reject("Client fullScan error", error.localizedMessage, error)
+      return result.reject("Wollet applyUpdate error", error.localizedMessage, error)
     }
   }
 
@@ -149,16 +223,70 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       val transactions: MutableList<Map<String, Any?>> = mutableListOf()
       for (item in list) {
         var txObject = getTransactionObject(item)
-          val randomId = randomId()
-          _transactions[randomId] = item
-          txObject["transaction"] = randomId
+        val randomId = randomId()
+        _walletTxs[randomId] = item
+        txObject["transaction"] = randomId
         transactions.add(txObject)
       }
       result.resolve(Arguments.makeNativeArray(transactions))
     } catch (error: Throwable) {
-      result.reject("List transactions error", error.localizedMessage, error)
+      result.reject("Wollet getTransactions error", error.localizedMessage, error)
     }
   }
 
-}
+  @ReactMethod
+  fun getDescriptor(wolletId: String, result: Promise) {
+    try {
+      val wollet = _wollets[wolletId]
+      result.resolve(wollet!!.descriptor().toString())
+    } catch (error: Throwable) {
+      result.reject("Wollet getDescriptor error", error.localizedMessage, error)
+    }
+  }
 
+  @ReactMethod
+  fun getAddress(wolletId: String, result: Promise) {
+    try {
+      val wollet = _wollets[wolletId]
+      val address = wollet!!.address(null)
+      result.resolve(getAddressObject(address))
+    } catch (error: Throwable) {
+      result.reject("Wollet getAddress error", error.localizedMessage, error)
+    }
+  }
+
+  @ReactMethod
+  fun getBalance(wolletId: String, result: Promise) {
+    try {
+      val wollet = _wollets[wolletId]
+      val balance = wollet!!.balance()
+      result.resolve(balance)
+    } catch (error: Throwable) {
+      result.reject("Wollet getBalance error", error.localizedMessage, error)
+    }
+  }
+
+  @ReactMethod
+  fun finalize(wolletId: String, psetId: String, result: Promise) {
+    try {
+      val wollet = _wollets[wolletId]
+      val pset = _psets[psetId]
+      val newPset = wollet!!.finalize(pset!!)
+      result.resolve(newPset)
+    } catch (error: Throwable) {
+      result.reject("Wollet finalize error", error.localizedMessage, error)
+    }
+  }
+
+  /* Pset */
+
+  @ReactMethod
+  fun psetAsString(psetId: String, result: Promise) {
+    try {
+      val pset = _psets[psetId]
+      result.resolve(pset.toString())
+    } catch (error: Throwable) {
+      result.reject("Pset toString error", error.localizedMessage, error)
+    }
+  }
+}

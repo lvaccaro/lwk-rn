@@ -34,3 +34,20 @@ func getTransactionObject(transaction: WalletTx?) -> [String: Any] {
         "timestamp": transaction?.timestamp() as Any
     ] as [String: Any]
 }
+
+func getAddressObject(address: Address?) -> [String: Any?] {
+    return [
+        "description": address?.description as Any,
+        "is_blinded": address?.isBlinded() as Any,
+        "qr_code_text": try? address?.qrCodeText() as? Any,
+        "script_pubkey": address?.scriptPubkey().description as Any,
+    ] as [String: Any?]
+}
+
+func setChain(chain: String? = "external") -> Chain {
+    switch (chain) {
+    case "external": return Chain.external
+    case "internal": return Chain.internal
+    default: return Chain.external
+    }
+}

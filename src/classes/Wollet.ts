@@ -1,9 +1,9 @@
 import { Network } from '../lib/enums';
-import { type Update } from '../lib/bindings';
-import { createWolletTxObject } from '../lib/utils';
-import { WolletTx } from '../lib/bindings';
+import { type Update, type Address, type Balance } from '../lib/types';
+import { type WolletTx } from '../lib/types';
 import { NativeLoader } from './NativeLoader';
 import { Descriptor } from './Descriptor';
+import { Pset } from './Pset';
 
 export class Wollet extends NativeLoader {
   id: string = '';
@@ -12,7 +12,7 @@ export class Wollet extends NativeLoader {
   async create(
     network: Network,
     descriptor: Descriptor,
-    datadir: string
+    datadir: string | null
   ): Promise<Wollet> {
     if (!Object.values(Network).includes(network)) {
       throw `Invalid network passed. Allowed values are ${Object.values(Network)}`;
@@ -27,12 +27,19 @@ export class Wollet extends NativeLoader {
   }
 
   async getTransactions(): Promise<Array<WolletTx>> {
-    let list = await this._lwk.getTransactions(this.id);
-    let transactions: Array<WolletTx> = [];
-    list.map((item) => {
-      let localObj = createWolletTxObject(item);
-      transactions.push(localObj);
-    });
-    return transactions;
+    return await this._lwk.getTransactions(this.id);
+  }
+
+  async getAddress(): Promise<Address> {
+    return await this._lwk.getAddress(this.id, null);
+  }
+
+  async getBalance(): Promise<Balance> {
+    return await this._lwk.getBalance(this.id);
+  }
+
+  async finalized(pset: Pset): Promise<Pset> {
+    let newPsetId = await this._lwk.finalize(this.id, pset.id);
+    return new Pset().from(newPsetId);
   }
 }

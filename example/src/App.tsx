@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
-import { Descriptor, Wollet, Client } from 'lwk-rn';
-import { Network } from 'lwk-rn';
+import { Wollet, Client, Signer, Network } from 'lwk-rn';
 
 export default function App() {
   const [result, setResult] = useState<string | undefined>();
@@ -12,21 +11,28 @@ export default function App() {
       const mnemonic =
         'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
       const network = Network.Testnet;
-      const descriptor = await new Descriptor().createDescriptorSecret(
-        network,
-        mnemonic
-      );
-      const descriptorString = await descriptor.asString();
-      console.log('Your descriptor ' + descriptorString);
-      const wollet = await new Wollet().create(network, descriptor, '');
+      const signer = await new Signer().create(mnemonic, network);
+      const descriptor = await signer.wpkhSlip77Descriptor();
+      const wollet = await new Wollet().create(network, descriptor, null);
       const client = await new Client().defaultElectrumClient(network);
       const update = await client.fullScan(wollet);
       await wollet.applyUpdate(update);
+
       const txs = await wollet.getTransactions();
-      console.log('Your have ' + txs + ' txs');
+      console.log('Get transactions');
+      console.log(txs.length.toString());
+
+      const address = await wollet.getAddress();
+      console.log('Get address');
+      console.log(address);
+
+      const balance = await wollet.getBalance();
+      console.log('Get balance');
+      console.log(balance);
 
       setResult(txs.length.toString());
     }
+
     setup();
   }, []);
 

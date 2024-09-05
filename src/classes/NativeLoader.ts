@@ -1,4 +1,4 @@
-import type { WolletTx } from '../lib/bindings';
+import type { Address, Balance, WolletTx } from '../lib/types';
 import { Network } from '../lib/enums';
 import { NativeModules, Platform } from 'react-native';
 
@@ -9,23 +9,40 @@ const LINKING_ERROR =
   '- You are not using Expo Go\n';
 
 export interface NativeLwk {
-  multiply(a: number, b: number): number;
-
-  createDescriptorSecret(network: Network, mnemonic: string): string;
+  // Descriptor
   createDescriptor(descriptor: string): string;
   descriptorAsString(id: string): string;
 
+  // Electrum Client
   initElectrumClient(
     electrumUrl: string,
     tls: boolean,
     validateDomain: boolean
   ): string;
   defaultElectrumClient(network: Network): string;
+  broadcast(clientId: string, txId: string): string;
 
-  createWollet(network: Network, descriptorId: string, datadir: string): string;
+  // Signer
+  createSigner(mnemonic: string, network: Network): string;
+  sign(signerId: string, psetId: string): string;
+  wpkhSlip77Descriptor(signerId: string): string;
+
+  // Wollet
+  createWollet(
+    network: Network,
+    descriptorId: string,
+    datadir: string | null
+  ): string;
   fullScan(wolletId: string, clientId: string): string;
   applyUpdate(wolletId: string, updateId: string): string;
   getTransactions(wolletId: string): Array<WolletTx>;
+  getDescriptor(wolletId: string): string;
+  getBalance(wolletId: string): Balance;
+  getAddress(wolletId: string, index: number | null): Address;
+  finalize(wolletId: string, psetId: string): string;
+
+  // Pset
+  psetAsString(psetId: string): string;
 }
 
 export class NativeLoader {

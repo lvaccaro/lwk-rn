@@ -1,6 +1,4 @@
-
 import { Network } from './enums';
-import { WolletTx } from './bindings';
 
 /** Get Network Enum */
 export const getNetwork = (networkName: string): Network => {
@@ -18,24 +16,3 @@ export const getNetwork = (networkName: string): Network => {
     }
     return networkEnum;
   };
-
-
-type Props = {
-  txid: string;
-  balance: any;
-  type: string;
-  fee?: number;
-  height?: number;
-  timestamp?: number;
-};
-
-export const createWolletTxObject = (item: Props): WolletTx => {
-  return new WolletTx(
-    item.txid,
-    item.balance,
-    item.type,
-    item?.fee,
-    item?.height,
-    item?.timestamp
-  );
-};
