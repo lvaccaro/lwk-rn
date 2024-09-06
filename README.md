@@ -97,6 +97,14 @@ See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the 
 
 See the [how-to](HOW-TO.md) to learn how works lwk-rn react native module and the repo code.
 
+## Greetings
+
+Thanks to all Blockstream LWK team for the amazing library.
+
+A special thanks to @rcasatta to help me about packaging library for iOS and Android.
+
+A big thanks to @BlakeKaufman because give me the opportunity to build this library with a [Bounty](https://github.com/BlakeKaufman/BlitzWallet/issues/4) and made contributions by itself.
+
 ## License
 
 MIT
