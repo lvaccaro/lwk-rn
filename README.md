@@ -78,7 +78,7 @@ Build, sign and broadcast a Transaction:
 ```js
     const out_address = await wollet.getAddress().description;
     const satoshis = 900;
-    const fee_rate = 280; // this is fee rate sat/vB * 100. Example 280 would equal a fee rate of .28 sat/vB. 100 would equal .1 sat/vB
+    const fee_rate = 280; // this is the sat/vB * 100 fee rate. Example 280 would equal a fee rate of .28 sat/vB. 100 would equal .1 sat/vB
     const builder = await new TxBuilder().create(network);
     await builder.addLbtcRecipient(out_address, satoshis);
     await builder.feeRate(fee_rate);
