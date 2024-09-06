@@ -35,15 +35,19 @@ android {
 repositories {
     google()
     mavenCentral()
+    maven { url "https://jitpack.io" }
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/lvaccaro/lwk")
+      credentials {
+        username = ""
+        password = ""
+      }
+    }
 }
 
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-android:+'
-
-    // bitcoindevkit
-    //implementation 'org.bitcoindevkit:bdk-android:0.29.0'
-    //implementation files('libs/something_local.jar')
-    implementation files("/Users/luca/blockstream/lwk/lwk_bindings/android_bindings1/lib/build/outputs/aar/lib-debug.aar")
-
+    implementation 'com.blockstream:lwk_bindings:test1'
 }
