@@ -10,7 +10,7 @@ export class Pset extends NativeLoader {
   }
 
   async extractTx(): Promise<Transaction> {
-    let id = this._lwk.psetExtractTx(this.id);
+    let id = await this._lwk.psetExtractTx(this.id);
     return new Transaction().from(id);
   }
 
