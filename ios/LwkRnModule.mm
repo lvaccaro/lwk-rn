@@ -139,6 +139,12 @@
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )
+    RCT_EXTERN_METHOD(
+                    finalize:(nonnull NSString)wolletId
+                    psetId:(nonnull NSString)psetId
+                    resolve:(RCTPromiseResolveBlock)resolve
+                    reject:(RCTPromiseRejectBlock)reject
+    )
     
     /** TxBuilder Methods */
     RCT_EXTERN_METHOD(
