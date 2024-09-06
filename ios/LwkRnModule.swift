@@ -400,7 +400,7 @@ class LwkRnModule: NSObject {
                                 reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
-            try _txBuilders[id]?.addLbtcRecipient(address: Address(s: address), satoshi: satoshi.uint64Value)
+            try _txBuilders[id]?.addLbtcRecipient(address: try Address(s: address), satoshi: satoshi.uint64Value)
             resolve(nil)
         } catch {
             reject("TxBuilder addLbtcRecipient error", error.localizedDescription, error)
@@ -416,7 +416,7 @@ class LwkRnModule: NSObject {
                                reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
-            try _txBuilders[id]?.addRecipient(address: Address(s: address), satoshi: satoshi.uint64Value, asset: asset)
+            try _txBuilders[id]?.addRecipient(address: try Address(s: address), satoshi: satoshi.uint64Value, asset: asset)
             resolve(nil)
         } catch {
             reject("TxBuilder addRecipient error", error.localizedDescription, error)
@@ -430,7 +430,7 @@ class LwkRnModule: NSObject {
                               reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
-            try _txBuilders[id]?.drainLbtcTo(address: Address(s: address))
+            try _txBuilders[id]?.drainLbtcTo(address: try Address(s: address))
             resolve(nil)
         } catch {
             reject("TxBuilder drainLbtcTo error", error.localizedDescription, error)
@@ -471,9 +471,9 @@ class LwkRnModule: NSObject {
                          reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
-            let id = randomId()
-            let wollet = _wollets[wolletId]
             let txBuilder = _txBuilders[id]
+            let wollet = _wollets[wolletId]
+            let id = randomId()
             _psets[id] = try txBuilder!.finish(wollet: wollet!)
             resolve(id)
         } catch {
