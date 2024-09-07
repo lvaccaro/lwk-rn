@@ -30,8 +30,8 @@ export class Wollet extends NativeLoader {
     return await this._lwk.getTransactions(this.id);
   }
 
-  async getAddress(): Promise<Address> {
-    return await this._lwk.getAddress(this.id, null);
+   async getAddress(addressNum: number = 0): Promise<Address> {
+    return await this._lwk.getAddress(this.id, addressNum);
   }
 
   async getBalance(): Promise<Balance> {
