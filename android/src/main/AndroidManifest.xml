@@ -1,1 +1,3 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.lwkrn"></manifest>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="io.lwkrn">
+  <uses-permission android:name="android.permission.INTERNET" />
+</manifest>

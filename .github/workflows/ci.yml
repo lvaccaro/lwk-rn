@@ -103,6 +103,8 @@ jobs:
       - name: Build example for Android
         env:
           JAVA_OPTS: "-XX:MaxHeapSize=6g"
+          PAT_USER: ${{ secrets.PAT_USER }}
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           yarn turbo run build:android --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 

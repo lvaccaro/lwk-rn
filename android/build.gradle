@@ -1,5 +1,8 @@
 buildscript {
-    ext.kotlin_version = '1.9.10'
+    ext {
+      agp_version = '8.4.2'
+      kotlin_version = '1.9.0'
+    }
     ext.safeExtGet = { prop, fallback ->
         return rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
     }
@@ -10,8 +13,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${safeExtGet('kotlinVersion', '1.6.10')}"
+        classpath "com.android.tools.build:gradle:$agp_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -23,31 +26,37 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion safeExtGet('compileSdkVersion', 30)
-    buildToolsVersion safeExtGet('buildToolsVersion', '30.0.0')
-
-    defaultConfig {
-        minSdkVersion safeExtGet('minSdkVersion', 21)
-        targetSdkVersion safeExtGet('targetSdkVersion', 30)
-    }
+  compileSdkVersion safeExtGet('compileSdkVersion', 34)
+  namespace 'io.lwkrn'
+  defaultConfig {
+    minSdkVersion safeExtGet('minSdkVersion', 34)
+    targetSdkVersion safeExtGet('targetSdkVersion', 34)
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+  kotlinOptions {
+    jvmTarget = '17'
+  }
 }
 
 repositories {
     google()
     mavenCentral()
-    maven { url "https://jitpack.io" }
+    mavenLocal()
     maven {
       name = "GitHubPackages"
-      url = uri("https://maven.pkg.github.com/lvaccaro/lwk")
+      url = uri("https://maven.pkg.github.com/blockstream/lwk")
       credentials {
-        username = ""
-        password = ""
+        username = System.getenv('PAT_USER')
+        password = System.getenv('PAT_TOKEN')
       }
     }
 }
-
 dependencies {
     //noinspection GradleDynamicVersion
-    implementation 'com.facebook.react:react-android:+'
-    implementation 'com.blockstream:lwk_bindings:test1'
+    implementation 'com.facebook.react:react-android:0.75.2'
+    implementation 'com.facebook.react:hermes-android:0.75.2'
+    implementation 'com.blockstream:lwk_bindings:test'
 }

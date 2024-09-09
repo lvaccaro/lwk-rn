@@ -39,5 +39,13 @@ allprojects {
         }
         mavenCentral()
         google()
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/blockstream/lwk")
+            credentials {
+                username = System.getenv('PAT_USER')
+                password = System.getenv('PAT_TOKEN')
+            }
+        }
     }
 }
