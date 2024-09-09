@@ -2,6 +2,7 @@ package io.lwkrn
 
 import lwk.Network
 import lwk.WalletTx
+import lwk.Address
 import java.util.*
 
 fun setNetwork(networkStr: String? = "testnet"): Network {
@@ -36,9 +37,9 @@ fun getTransactionObject(transaction: WalletTx): MutableMap<String, Any> {
 
 fun getAddressObject(address: Address): MutableMap<String, Any> {
   return mutableMapOf<String, Any>(
-    "description" to address.description,
+    "description" to address.toString(),
     "is_blinded" to address.isBlinded(),
     "qr_code_text" to address.qrCodeText(),
-    "script_pubkey" to address.scriptPubkey().description
+    "script_pubkey" to address.scriptPubkey().toString()
   )
 }

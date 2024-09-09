@@ -188,7 +188,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   fun createWollet(
     network: String,
     descriptorId: String,
-    datadir: String,
+    datadir: String?,
     result: Promise
   ) {
     try {
@@ -251,7 +251,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   fun getAddress(wolletId: String, result: Promise) {
     try {
       val wollet = _wollets[wolletId]
-      val address = wollet!!.address(null)
+      val address = wollet!!.address(null).address()
       result.resolve(getAddressObject(address))
     } catch (error: Throwable) {
       result.reject("Wollet getAddress error", error.localizedMessage, error)
