@@ -104,7 +104,12 @@
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )
-    
+    RCT_EXTERN_METHOD(
+                      finalize:(nonnull NSString)wolletId
+                      psetId:(nonnull NSString)psetId
+                      resolve:(RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
     /** Transactions Methods */
     RCT_EXTERN_METHOD(
                       createTransaction: (nonnull NSString)string
@@ -139,12 +144,19 @@
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )
+    
     RCT_EXTERN_METHOD(
-                    finalize:(nonnull NSString)wolletId
-                    psetId:(nonnull NSString)psetId
-                    resolve:(RCTPromiseResolveBlock)resolve
-                    reject:(RCTPromiseRejectBlock)reject
-    )
+                      issuanceAsset: (nonnull NSString)id
+                      index: (nonnull NSNumber)index
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
+                      issuanceToken: (nonnull NSString)id
+                      index: (nonnull NSNumber)index
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
     
     /** TxBuilder Methods */
     RCT_EXTERN_METHOD(
@@ -191,18 +203,59 @@
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )
-    
     RCT_EXTERN_METHOD(
                       txBuilderFinish: (nonnull NSString)id
                       wolletId: (nonnull NSString)wolletId
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )
+    RCT_EXTERN_METHOD(
+                      txBuilderFinish: (nonnull NSString)id
+                      wolletId: (nonnull NSString)wolletId
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
+                      txBuilderIssueAsset: (nonnull NSString)id
+                      assetSats: (nonnull NSNumber)assetSats
+                      assetReceiver: (NSString)assetReceiver
+                      tokenSats: (nonnull NSNumber)tokenSats
+                      tokenReceiver: (NSString)tokenReceiver
+                      contractId: (NSString)contractId
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
+                      txBuilderReissueAsset: (nonnull NSString)id
+                      assetToReissue: (nonnull NSString)assetToReissue
+                      satoshiToReissue: (nonnull NSNumber)satoshiToReissue
+                      assetReceiver: (NSString)assetReceiver
+                      issuanceTx: (NSString)issuanceTx
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
     
+    /* Contract */
+    RCT_EXTERN_METHOD(
+                      createContract: (nonnull NSString)domain
+                      issuerPubkey: (nonnull NSString)issuerPubkey
+                      name: (nonnull NSString)name
+                      precision: (nonnull NSNumber)precision
+                      ticker: (nonnull NSString)ticker
+                      version: (nonnull NSNumber)version
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
+                      contractAsString: (nonnull NSString)id
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+
     + (BOOL)requiresMainQueueSetup
     {
         return NO;
     }
-    
+
 @end
     

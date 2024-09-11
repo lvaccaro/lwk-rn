@@ -14,7 +14,7 @@ class LwkRnModule: NSObject {
     var _addresses: [String: Address] = [:]
     var _psets: [String: Pset] = [:]
     var _txBuilders: [String: TxBuilder] = [:]
-    
+    var _contracts: [String: Contract] = [:]
     
     /* WolletDescriptor */
     @objc
@@ -40,7 +40,7 @@ class LwkRnModule: NSObject {
         resolve(_descriptors[keyId]!.description)
     }
     
-    
+
     
     /* Signer */
     @objc
@@ -334,7 +334,7 @@ class LwkRnModule: NSObject {
     ) -> Void {
         let tx = _transactions[txId]
         resolve(tx?.description)
-    }    
+    }
     
     /* Pset */
     @objc
@@ -360,6 +360,26 @@ class LwkRnModule: NSObject {
         } catch {
             reject("Pset extractTx error", error.localizedDescription, error)
         }
+    }
+    
+    @objc
+    func issuanceAsset(_
+                       id: String,
+                       index: NSNumber,
+                       resolve: RCTPromiseResolveBlock,
+                       reject: RCTPromiseRejectBlock
+    ) -> Void {
+        resolve(_psets[id]?.issuanceAsset(index: index.uint32Value))
+    }
+    
+    @objc
+    func issuanceToken(_
+                       id: String,
+                       index: NSNumber,
+                       resolve: RCTPromiseResolveBlock,
+                       reject: RCTPromiseRejectBlock
+    ) -> Void {
+        resolve(_psets[id]?.issuanceToken(index: index.uint32Value))
     }
     
     /* TxBuilder */
@@ -393,11 +413,11 @@ class LwkRnModule: NSObject {
     }
     @objc
     func txBuilderAddLbtcRecipient(_
-                                id: String,
-                                address: String,
-                                satoshi: NSNumber,
-                                resolve: RCTPromiseResolveBlock,
-                                reject: RCTPromiseRejectBlock
+                                   id: String,
+                                   address: String,
+                                   satoshi: NSNumber,
+                                   resolve: RCTPromiseResolveBlock,
+                                   reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
             try _txBuilders[id]?.addLbtcRecipient(address: try Address(s: address), satoshi: satoshi.uint64Value)
@@ -481,4 +501,77 @@ class LwkRnModule: NSObject {
         }
     }
     
+    @objc
+    func txBuilderIssueAsset(_
+                             id: String,
+                             assetSats: NSNumber,
+                             assetReceiver: String?,
+                             tokenSats: NSNumber,
+                             tokenReceiver: String?,
+                             contractId: String?,
+                             resolve: RCTPromiseResolveBlock,
+                             reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            let txBuilder = _txBuilders[id]
+            let contract = contractId != nil ? _contracts[contractId!] : nil
+            let assetReceiver = assetReceiver != nil ? try Address(s: assetReceiver!) : nil
+            let tokenReceiver = tokenReceiver != nil ? try Address(s: tokenReceiver!) : nil
+            try _txBuilders[id]?.issueAsset(assetSats: assetSats.uint64Value, assetReceiver: assetReceiver, tokenSats: assetSats.uint64Value, tokenReceiver: tokenReceiver, contract: contract)
+            resolve(nil)
+        } catch {
+            reject("TxBuilder issueAsset error", error.localizedDescription, error)
+        }
+    }
+    
+    @objc
+    func txBuilderReissueAsset(_
+                               id: String,
+                               assetToReissue: String,
+                               satoshiToReissue: NSNumber,
+                               assetReceiver: String?,
+                               issuanceTx: String?,
+                               resolve: RCTPromiseResolveBlock,
+                               reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            let txBuilder = _txBuilders[id]
+            let assetReceiver = assetReceiver != nil ? try Address(s: assetReceiver!) : nil
+            let issuanceTx = issuanceTx != nil ? try Transaction(hex: issuanceTx!) : nil
+            try _txBuilders[id]?.reissueAsset(assetToReissue: assetToReissue, satoshiToReissue: satoshiToReissue.uint64Value, assetReceiver: assetReceiver, issuanceTx: issuanceTx)
+            resolve(nil)
+        } catch {
+            reject("TxBuilder reissueAsset error", error.localizedDescription, error)
+        }
+    }
+    
+    /* Contract */
+    @objc
+    func createContract(_
+                        domain: String,
+                        issuerPubkey: String,
+                        name: String,
+                        precision: NSNumber,
+                        ticker: String,
+                        version: NSNumber,
+                        resolve: RCTPromiseResolveBlock,
+                        reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            let id = randomId()
+            let contract = try Contract(domain: domain, issuerPubkey: issuerPubkey, name: name, precision: precision.uint8Value, ticker: ticker, version: version.uint8Value)
+            _contracts[id] = contract
+            resolve(id)
+        } catch {
+            reject("Contract create error", error.localizedDescription, error)
+        }
+    }
+    @objc
+    func contractAsString(_
+                          id: String,
+                          resolve: @escaping RCTPromiseResolveBlock,
+                          reject: @escaping RCTPromiseRejectBlock
+    ) {
+        resolve(_contracts[id]!.description)
+    }
 }

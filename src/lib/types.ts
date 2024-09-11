@@ -20,3 +20,12 @@ export type Address = {
   qr_code_text: string;
   script_pubkey: string;
 }
+
+export type Contract = {
+  domain: string;
+  issuerPubkey: string;
+  name: string;
+  precision: number;
+  ticker: string;
+  version: number;  
+}

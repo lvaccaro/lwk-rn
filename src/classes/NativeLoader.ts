@@ -50,6 +50,8 @@ export interface NativeLwk {
   // Pset
   psetAsString(psetId: string): string;
   psetExtractTx(psetId: string): string;
+  psetIssuanceAsset(id: string, index: number): string;
+  psetissuanceToken(id: string, index: number): string;
 
   // TxBuilder
   createTxBuilder(network: string): string;
@@ -65,6 +67,32 @@ export interface NativeLwk {
   txBuilderDrainLbtcWallet(id: string): null;
   txBuilderFeeRate(id: string, rate: number | null): null;
   txBuilderFinish(id: string, wolletId: string): string;
+  txBuilderIssueAsset(
+    id: string,
+    assetSats: number,
+    assetReceiver: string | null,
+    tokenSats: number,
+    tokenReceiver: string | null,
+    contract: string | null
+  ): null;
+  txBuilderReissueAsset(
+    id: string,
+    assetToReissue: string,
+    satoshiToReissue: number,
+    assetReceiver: string | null,
+    issuanceTx: string | null
+  ): null;
+
+  // Contract
+  createContract(
+    domain: string,
+    issuerPubkey: string,
+    name: string,
+    precision: number,
+    ticker: string,
+    version: number
+  ): string;
+  contractAsString(id: string): string;
 }
 
 export class NativeLoader {

@@ -1,6 +1,8 @@
 import { NativeLoader } from './NativeLoader';
 import { Wollet } from './Wollet';
 import { Pset } from './Pset';
+import type { Contract } from '../lib/types';
+import { Transaction } from '../../lib/typescript/commonjs/src';
 
 export class TxBuilder extends NativeLoader {
   id: string = '';
@@ -46,5 +48,50 @@ export class TxBuilder extends NativeLoader {
   async finish(wollet: Wollet): Promise<Pset> {
     let psetId = await this._lwk.txBuilderFinish(this.id, wollet.id);
     return new Pset().from(psetId);
+  }
+
+  async issueAsset(
+    assetSats: number,
+    assetReceiver: string | null,
+    tokenSats: number,
+    tokenReceiver: string | null,
+    contract: Contract | null
+  ): Promise<null> {
+    let contractId =
+      contract == null
+        ? null
+        : this._lwk.createContract(
+            contract.domain,
+            contract.issuerPubkey,
+            contract.name,
+            contract.precision,
+            contract.ticker,
+            contract.version
+          );
+    return await this._lwk.txBuilderIssueAsset(
+      this.id,
+      assetSats,
+      assetReceiver,
+      tokenSats,
+      tokenReceiver,
+      contractId
+    );
+  }
+
+  async reissueAsset(
+    assetToReissue: string,
+    satoshiToReissue: number,
+    assetReceiver: string | null,
+    issuanceTx: Transaction | null
+  ): Promise<null> {
+    let transactionHex =
+      issuanceTx == null ? null : await issuanceTx?.asString();
+    return await this._lwk.txBuilderReissueAsset(
+      this.id,
+      assetToReissue,
+      satoshiToReissue,
+      assetReceiver,
+      transactionHex
+    );
   }
 }

@@ -6,6 +6,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import lwk.Address
+import lwk.Contract
 import lwk.ElectrumClient
 import lwk.Mnemonic
 import lwk.Pset
@@ -33,6 +34,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   private var _psets = mutableMapOf<String, Pset>()
   private var _signers = mutableMapOf<String, Signer>()
   private var _txBuilders = mutableMapOf<String, TxBuilder>()
+  private var _contracts = mutableMapOf<String, Contract>()
 
   /* Descriptor */
 
@@ -338,6 +340,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @ReactMethod
   fun psetExtractTx(psetId: String, result: Promise) {
     try {
       val id = randomId()
@@ -346,6 +349,26 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       result.resolve(id)
     } catch (error: Throwable) {
       result.reject("Pset extractTx error", error.localizedMessage, error)
+    }
+  }
+
+  @ReactMethod
+  fun psetIssuanceAsset(id: String, index: UInt, result: Promise) {
+    try {
+      val assetId = _psets[id]?.issuanceAsset(index)
+      result.resolve(assetId)
+    } catch (error: Throwable) {
+      result.reject("Pset issuanceAsset error", error.localizedMessage, error)
+    }
+  }
+
+  @ReactMethod
+  fun psetIssuanceToken(id: String, index: UInt, result: Promise) {
+    try {
+      val assetId = _psets[id]?.issuanceToken(index)
+      result.resolve(assetId)
+    } catch (error: Throwable) {
+      result.reject("Pset issuanceToken error", error.localizedMessage, error)
     }
   }
 
@@ -364,6 +387,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @ReactMethod
   fun txBuilderAddBurn(id: String, satoshi: ULong, asset: String, result: Promise) {
     try {
       _txBuilders[id]!!.addBurn(satoshi, asset)
@@ -373,6 +397,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @ReactMethod
   fun txBuilderAddLbtcRecipient(id: String, address: String, satoshi: ULong, result: Promise) {
     try {
       _txBuilders[id]!!.addLbtcRecipient(Address(address), satoshi)
@@ -382,6 +407,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @ReactMethod
   fun txBuilderAddRecipient(
     id: String,
     address: String,
@@ -397,6 +423,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @ReactMethod
   fun txBuilderDrainLbtcTo(id: String, address: String, result: Promise) {
     try {
       _txBuilders[id]!!.drainLbtcTo(Address(address))
@@ -406,6 +433,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @ReactMethod
   fun txBuilderDrainLbtcWallet(id: String, result: Promise) {
     try {
       _txBuilders[id]!!.drainLbtcWallet()
@@ -415,6 +443,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @ReactMethod
   fun txBuilderFeeRate(id: String, rate: Float, result: Promise) {
     try {
       _txBuilders[id]!!.feeRate(rate)
@@ -424,6 +453,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @ReactMethod
   fun txBuilderFinish(id: String, wolletId: String, result: Promise) {
     try {
       val id = randomId()
@@ -434,4 +464,69 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       result.reject("TxBuilder finish error", error.localizedMessage, error)
     }
   }
+
+  @ReactMethod
+  fun txBuilderIssueAsset(
+    id: String,
+    assetSats: ULong,
+    assetReceiver: String?,
+    tokenSats: ULong,
+    tokenReceiver: String?,
+    contractId: String?,
+    result: Promise) {
+    try {
+      val assetReceiver = assetReceiver?.let { Address(assetReceiver) }
+      val tokenReceiver = tokenReceiver?.let { Address(tokenReceiver) }
+      val contract = contractId?.let { _contracts[contractId] }
+      _txBuilders[id]!!.issueAsset(assetSats, assetReceiver, tokenSats, tokenReceiver, contract)
+      result.resolve(null)
+    } catch (error: Throwable) {
+      result.reject("TxBuilder issueAsset error", error.localizedMessage, error)
+    }
+  }
+
+  @ReactMethod
+  fun txBuilderReissueAsset(
+    id: String,
+    assetToReissue: String,
+    satoshiToReissue: ULong,
+    assetReceiver: String?,
+    issuanceTx: String?,
+    result: Promise) {
+    try {
+      val assetReceiver = assetReceiver?.let { Address(assetReceiver) }
+      val issuanceTx = issuanceTx?.let { Transaction(issuanceTx) }
+      _txBuilders[id]!!.reissueAsset(assetToReissue, satoshiToReissue, assetReceiver, issuanceTx)
+      result.resolve(null)
+    } catch (error: Throwable) {
+      result.reject("TxBuilder reissueAsset error", error.localizedMessage, error)
+    }
+  }
+  /* Contract */
+  @ReactMethod
+  fun createContract(
+    domain: String,
+    issuerPubkey: String,
+    name: String,
+    precision: UByte,
+    ticker: String,
+    version: UByte,
+    result: Promise) {
+    try {
+      val id = randomId()
+      _contracts[id] = Contract(domain, issuerPubkey, name, precision, ticker, version)
+      result.resolve(null)
+    } catch (error: Throwable) {
+      result.reject("Contract create error", error.localizedMessage, error)
+    }
+  }
+
+  @ReactMethod
+  fun contractAsString(
+    id: String,
+    result: Promise
+  ) {
+    result.resolve(_contracts[id]!!.toString())
+  }
+
 }
