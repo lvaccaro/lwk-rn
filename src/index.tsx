@@ -6,7 +6,12 @@ import { Pset } from './classes/Pset';
 import { Transaction } from './classes/Transaction';
 import { TxBuilder } from './classes/TxBuilder';
 import { Network, ClientNames } from './lib/enums';
-import { type Address, type WolletTx, type Balance } from './lib/types';
+import {
+  type Address,
+  type WolletTx,
+  type Balance,
+  type Contract,
+} from './lib/types';
 import { type ElectrumClientConfig } from './lib/interfaces';
 
 export {
@@ -20,6 +25,7 @@ export {
   TxBuilder,
   ClientNames,
   type Address,
+  type Contract,
   type WolletTx,
   type Balance,
   type ElectrumClientConfig,
