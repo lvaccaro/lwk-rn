@@ -277,8 +277,9 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     try {
       val wollet = _wollets[wolletId]
       val pset = _psets[psetId]
-      val newPset = wollet!!.finalize(pset!!)
-      result.resolve(newPset)
+      val id = randomId()
+      _psets[id] = wollet!!.finalize(pset!!)
+      result.resolve(id)
     } catch (error: Throwable) {
       result.reject("Wollet finalize error", error.localizedMessage, error)
     }
