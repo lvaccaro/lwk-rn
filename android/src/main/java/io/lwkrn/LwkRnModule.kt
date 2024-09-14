@@ -1,6 +1,7 @@
 package io.lwkrn
 
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Dynamic
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -250,11 +251,11 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun getAddress(wolletId: String, result: Promise) {
+  fun getAddress(wolletId: String, index: Dynamic, result: Promise) {
     try {
       val wollet = _wollets[wolletId]
-      val address = wollet!!.address(null).address()
-      result.resolve(getAddressObject(address))
+      val address = wollet!!.address(if (index.isNull) null else index.asInt().toUInt()).address()
+      result.resolve(Arguments.makeNativeMap(getAddressObject(address)))
     } catch (error: Throwable) {
       result.reject("Wollet getAddress error", error.localizedMessage, error)
     }

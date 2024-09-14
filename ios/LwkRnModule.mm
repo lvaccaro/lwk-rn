@@ -95,7 +95,7 @@
     
     RCT_EXTERN_METHOD(
                       getAddress: (nonnull NSString)wolletId
-                      index: (nonnull NSNumber)index
+                      index: (NSNumber)index
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )
