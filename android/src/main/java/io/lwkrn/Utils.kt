@@ -24,14 +24,14 @@ fun getNetworkString(network: Network): String {
 
 fun randomId() = UUID.randomUUID().toString()
 
-fun getTransactionObject(transaction: WalletTx): MutableMap<String, Any> {
-  return mutableMapOf<String, Any>(
+fun getTransactionObject(transaction: WalletTx): MutableMap<String, Any?> {
+  return mutableMapOf<String, Any?>(
     "fee" to transaction.fee().toInt(),
     "balance" to transaction.balance(),
     "type" to transaction.type(),
-    "txid" to transaction.txid(),
-    "height" to transaction.height()!!,
-    "timestamp" to transaction.timestamp()!!
+    "txid" to transaction.txid().toString(),
+    "height" to transaction.height()?.toInt(),
+    "timestamp" to transaction.timestamp()?.toInt()
   )
 }
 
