@@ -265,8 +265,8 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   fun getBalance(wolletId: String, result: Promise) {
     try {
       val wollet = _wollets[wolletId]
-      val balance = wollet!!.balance()
-      result.resolve(balance)
+      val balance = wollet!!.balance().mapValues { it.value.toInt() }
+      result.resolve(Arguments.makeNativeMap(balance))
     } catch (error: Throwable) {
       result.reject("Wollet getBalance error", error.localizedMessage, error)
     }
@@ -354,9 +354,9 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun psetIssuanceAsset(id: String, index: UInt, result: Promise) {
+  fun psetIssuanceAsset(id: String, index: Int, result: Promise) {
     try {
-      val assetId = _psets[id]?.issuanceAsset(index)
+      val assetId = _psets[id]?.issuanceAsset(index.toUInt())
       result.resolve(assetId)
     } catch (error: Throwable) {
       result.reject("Pset issuanceAsset error", error.localizedMessage, error)
@@ -364,9 +364,9 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun psetIssuanceToken(id: String, index: UInt, result: Promise) {
+  fun psetIssuanceToken(id: String, index: Int, result: Promise) {
     try {
-      val assetId = _psets[id]?.issuanceToken(index)
+      val assetId = _psets[id]?.issuanceToken(index.toUInt())
       result.resolve(assetId)
     } catch (error: Throwable) {
       result.reject("Pset issuanceToken error", error.localizedMessage, error)
@@ -389,9 +389,9 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun txBuilderAddBurn(id: String, satoshi: ULong, asset: String, result: Promise) {
+  fun txBuilderAddBurn(id: String, satoshi: Int, asset: String, result: Promise) {
     try {
-      _txBuilders[id]!!.addBurn(satoshi, asset)
+      _txBuilders[id]!!.addBurn(satoshi.toULong(), asset)
       result.resolve(null)
     } catch (error: Throwable) {
       result.reject("TxBuilder addBurn error", error.localizedMessage, error)
@@ -399,9 +399,9 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun txBuilderAddLbtcRecipient(id: String, address: String, satoshi: ULong, result: Promise) {
+  fun txBuilderAddLbtcRecipient(id: String, address: String, satoshi: Int, result: Promise) {
     try {
-      _txBuilders[id]!!.addLbtcRecipient(Address(address), satoshi)
+      _txBuilders[id]!!.addLbtcRecipient(Address(address), satoshi.toULong())
       result.resolve(null)
     } catch (error: Throwable) {
       result.reject("TxBuilder addLbtcRecipient error", error.localizedMessage, error)
@@ -412,12 +412,12 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   fun txBuilderAddRecipient(
     id: String,
     address: String,
-    satoshi: ULong,
+    satoshi: Int,
     asset: String,
     result: Promise
   ) {
     try {
-      _txBuilders[id]!!.addRecipient(Address(address), satoshi, asset)
+      _txBuilders[id]!!.addRecipient(Address(address), satoshi.toULong(), asset)
       result.resolve(null)
     } catch (error: Throwable) {
       result.reject("TxBuilder addRecipient error", error.localizedMessage, error)
@@ -457,10 +457,10 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun txBuilderFinish(id: String, wolletId: String, result: Promise) {
     try {
-      val id = randomId()
+      val newId = randomId()
       val wollet = _wollets[wolletId]
-      _psets[id] = _txBuilders[id]!!.finish(wollet!!)
-      result.resolve(id)
+      _psets[newId] = _txBuilders[id]!!.finish(wollet!!)
+      result.resolve(newId)
     } catch (error: Throwable) {
       result.reject("TxBuilder finish error", error.localizedMessage, error)
     }
@@ -469,9 +469,9 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun txBuilderIssueAsset(
     id: String,
-    assetSats: ULong,
+    assetSats: Int,
     assetReceiver: String?,
-    tokenSats: ULong,
+    tokenSats: Int,
     tokenReceiver: String?,
     contractId: String?,
     result: Promise) {
@@ -479,7 +479,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       val assetReceiver = assetReceiver?.let { Address(assetReceiver) }
       val tokenReceiver = tokenReceiver?.let { Address(tokenReceiver) }
       val contract = contractId?.let { _contracts[contractId] }
-      _txBuilders[id]!!.issueAsset(assetSats, assetReceiver, tokenSats, tokenReceiver, contract)
+      _txBuilders[id]!!.issueAsset(assetSats.toULong(), assetReceiver, tokenSats.toULong(), tokenReceiver, contract)
       result.resolve(null)
     } catch (error: Throwable) {
       result.reject("TxBuilder issueAsset error", error.localizedMessage, error)
@@ -490,14 +490,14 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   fun txBuilderReissueAsset(
     id: String,
     assetToReissue: String,
-    satoshiToReissue: ULong,
+    satoshiToReissue: Int,
     assetReceiver: String?,
     issuanceTx: String?,
     result: Promise) {
     try {
       val assetReceiver = assetReceiver?.let { Address(assetReceiver) }
       val issuanceTx = issuanceTx?.let { Transaction(issuanceTx) }
-      _txBuilders[id]!!.reissueAsset(assetToReissue, satoshiToReissue, assetReceiver, issuanceTx)
+      _txBuilders[id]!!.reissueAsset(assetToReissue, satoshiToReissue.toULong(), assetReceiver, issuanceTx)
       result.resolve(null)
     } catch (error: Throwable) {
       result.reject("TxBuilder reissueAsset error", error.localizedMessage, error)

@@ -27,7 +27,7 @@ fun randomId() = UUID.randomUUID().toString()
 fun getTransactionObject(transaction: WalletTx): MutableMap<String, Any?> {
   return mutableMapOf<String, Any?>(
     "fee" to transaction.fee().toInt(),
-    "balance" to transaction.balance(),
+    "balance" to transaction.balance().mapValues { it.value.toInt() },
     "type" to transaction.type(),
     "txid" to transaction.txid().toString(),
     "height" to transaction.height()?.toInt(),
