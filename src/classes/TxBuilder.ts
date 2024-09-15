@@ -1,8 +1,8 @@
 import { NativeLoader } from './NativeLoader';
 import { Wollet } from './Wollet';
 import { Pset } from './Pset';
+import { Transaction } from './Transaction';
 import type { Contract } from '../lib/types';
-import { Transaction } from '../../lib/typescript/commonjs/src';
 
 export class TxBuilder extends NativeLoader {
   id: string = '';
