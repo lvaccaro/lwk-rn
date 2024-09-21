@@ -9,7 +9,6 @@ module.exports = {
     },
     ios: {
       sourceDir: 'ios',
-      automaticPodsInstallation: true,
     },
   }),
   dependencies: {
