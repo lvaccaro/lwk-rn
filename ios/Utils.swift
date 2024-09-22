@@ -23,16 +23,37 @@ func randomId() -> String {
     return UUID().uuidString
 }
 
-func getTransactionObject(transaction: WalletTx?) -> [String: Any] {
+func getTransactionObject(transaction: WalletTx?) -> [String: Any?] {
     return [
-        "fee": transaction?.fee() as Any,
-        "balance": transaction?.balance() as Any,
-        "type": transaction?.type() as Any,
-        "txid": transaction?.txid().description as Any,
-        "tx": transaction?.tx().bytes() as Any,
-        "height": transaction?.height() as Any,
-        "timestamp": transaction?.timestamp() as Any
-    ] as [String: Any]
+        "fee": transaction?.fee(),
+        "balance": transaction?.balance(),
+        "type": transaction?.type(),
+        "txid": transaction?.txid().description,
+        "tx": transaction?.tx().bytes(),
+        "height": transaction?.height(),
+        "timestamp": transaction?.timestamp(),
+        "inputs": transaction?.inputs().compactMap { getWalletTxOutObject(out: $0) },
+        "outputs": transaction?.outputs().compactMap { getWalletTxOutObject(out: $0) }
+    ]
+}
+
+func getWalletTxOutObject(out: WalletTxOut?) -> [String: Any?] {
+    return [
+        "ext_int": out?.extInt() == .external ? "external" : "internal",
+        "height": out?.height(),
+        "outpoint": [
+            "txid": out?.outpoint().txid().description as? Any,
+            "vout": out?.outpoint().vout() as? Any
+        ],
+        "script_pubkey": out?.scriptPubkey().description,
+        "unblinded": [
+            "asset": out?.unblinded().asset() as? Any,
+            "assetBf": out?.unblinded().assetBf() as? Any,
+            "value": out?.unblinded().value() as? Any,
+            "valueBf": out?.unblinded().valueBf() as? Any
+        ],
+        "wildcard_index": out?.wildcardIndex()
+        ]
 }
 
 func getAddressObject(address: Address?) -> [String: Any?] {
