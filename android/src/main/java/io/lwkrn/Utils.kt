@@ -35,8 +35,8 @@ fun getTransactionObject(transaction: WalletTx): MutableMap<String, Any?> {
   )
 }
 
-fun getAddressObject(address: Address): MutableMap<String, Any?> {
-  return mutableMapOf<String, Any?>(
+fun getAddressObject(address: Address): MutableMap<String, Any> {
+  return mutableMapOf<String, Any>(
     "description" to address.toString(),
     "is_blinded" to address.isBlinded(),
     "qr_code_text" to address.qrCodeText(),

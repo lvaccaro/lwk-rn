@@ -244,13 +244,14 @@ class LwkRnModule: NSObject {
     @objc
     func getAddress(_
                     wolletId: String,
-                    index: NSNumber? = nil,
+                    index: String? = nil,
                     resolve: RCTPromiseResolveBlock,
                     reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
             let wollet = _wollets[wolletId]
-            let address = try wollet!.address(index: index?.uint32Value).address()
+            let index = index == nil ? nil : UInt32(index!, radix: 10)
+            let address = try wollet!.address(index: index).address()
             resolve(getAddressObject(address: address))
         } catch {
             reject("Wollet getAddress error", error.localizedDescription, error)
