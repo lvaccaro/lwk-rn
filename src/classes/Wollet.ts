@@ -4,6 +4,7 @@ import { type WolletTx } from '../lib/types';
 import { NativeLoader } from './NativeLoader';
 import { Descriptor } from './Descriptor';
 import { Pset } from './Pset';
+import { Client } from './Client';
 
 export class Wollet extends NativeLoader {
   id: string = '';
@@ -41,5 +42,8 @@ export class Wollet extends NativeLoader {
   async finalize(pset: Pset): Promise<Pset> {
     let newPsetId = await this._lwk.finalize(this.id, pset.id);
     return new Pset().from(newPsetId);
+  }
+  async waitTx(txid: string, client: Client): Promise<WolletTx> {
+    return await this._lwk.waitTx(this.id, txid, client.id);
   }
 }

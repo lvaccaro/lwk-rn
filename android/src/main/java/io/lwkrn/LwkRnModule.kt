@@ -14,6 +14,7 @@ import lwk.Pset
 import lwk.Signer
 import lwk.Transaction
 import lwk.TxBuilder
+import lwk.Txid
 import lwk.Update
 import lwk.WalletTx
 import lwk.Wollet
@@ -285,6 +286,21 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @ReactMethod
+  fun waitTx(wolletId: String, txid: String, clientId: String, result: Promise) {
+    try {
+      val wollet = _wollets[wolletId]
+      val client = _electrumClients[clientId]
+      val walletTx = wollet!!.waitForTx(Txid(txid), client!!)
+      val id = randomId()
+      _walletTxs[id] = walletTx
+      val txObject = getTransactionObject(walletTx)
+      txObject["transaction"] = id
+      result.resolve(Arguments.makeNativeMap(txObject))
+    } catch (error: Throwable) {
+      result.reject("Wollet waitTx error", error.localizedMessage, error)
+    }
+  }
   /* Transaction */
 
   @ReactMethod

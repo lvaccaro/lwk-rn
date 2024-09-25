@@ -291,6 +291,28 @@ class LwkRnModule: NSObject {
         }
     }
     
+    @objc
+    func waitForTx(_
+                   wolletId: String,
+                   txid: String,
+                   clientId: String,
+                   resolve: RCTPromiseResolveBlock,
+                   reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            let wollet = _wollets[wolletId]
+            let client = _electrumClients[clientId]
+            let wolletTx = try wollet!.waitForTx(txid: Txid(hex: txid), client: client!)
+            let id = randomId()
+            _wolletTxs[id] = wolletTx
+            var txObject = getTransactionObject(transaction: wolletTx)
+            txObject["transaction"] = randomId
+            resolve(txObject)
+        } catch {
+            reject("Wollet waitForTx error", error.localizedDescription, error)
+        }
+    }
+    
     /* Transaction */
     @objc
     func createTransaction(_

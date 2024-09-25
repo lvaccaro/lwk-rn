@@ -110,6 +110,14 @@
                       resolve:(RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )
+    RCT_EXTERN_METHOD(
+                      waitForTx:(nonnull NSString)wolletId
+                      txid:(nonnull NSString)txid
+                      clientId:(nonnull NSString)clientId
+                      resolve:(RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+
     /** Transactions Methods */
     RCT_EXTERN_METHOD(
                       createTransaction: (nonnull NSString)string

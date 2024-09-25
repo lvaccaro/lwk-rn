@@ -40,6 +40,7 @@ export interface NativeLwk {
   getBalance(wolletId: string): Balance;
   getAddress(wolletId: string, index: number | null): Address;
   finalize(wolletId: string, psetId: string): string;
+  waitTx(wolletId: string, txid: string, clientId: string): WolletTx;
 
   // Transaction
   createTransaction(hex: string): string;
