@@ -49,7 +49,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       _descriptors[id] = WolletDescriptor(descriptor)
       result.resolve(id)
     } catch (error: Throwable) {
-      return result.reject("WolletDescriptor create error", error.localizedMessage, error)
+      result.reject("WolletDescriptor create error", error.localizedMessage, error)
     }
   }
 
@@ -76,7 +76,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       _signers[id] = Signer(mnemonicObj, networkObj)
       result.resolve(id)
     } catch (error: Throwable) {
-      return result.reject("Signer create error", error.localizedMessage, error)
+      result.reject("Signer create error", error.localizedMessage, error)
     }
   }
 
@@ -93,7 +93,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       _psets[id] = signer!!.sign(pset!!)
       result.resolve(id)
     } catch (error: Throwable) {
-      return result.reject("Signer sign error", error.localizedMessage, error)
+      result.reject("Signer sign error", error.localizedMessage, error)
     }
   }
 
@@ -108,7 +108,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       _descriptors[id] = signer!!.wpkhSlip77Descriptor()
       result.resolve(id)
     } catch (error: Throwable) {
-      return result.reject("Signer wpkhSlip77Descriptor error", error.localizedMessage, error)
+      result.reject("Signer wpkhSlip77Descriptor error", error.localizedMessage, error)
     }
   }
 
@@ -126,7 +126,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       _electrumClients[id] = ElectrumClient(electrumUrl, tls, validateDomain)
       result.resolve(id)
     } catch (error: Throwable) {
-      return result.reject("ElectrumClient create error", error.localizedMessage, error)
+      result.reject("ElectrumClient create error", error.localizedMessage, error)
     }
   }
 
@@ -141,7 +141,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       _electrumClients[id] = networkObj.defaultElectrumClient()
       result.resolve(id)
     } catch (error: Throwable) {
-      return result.reject(
+      result.reject(
         "ElectrumClient defaultElectrumClient error",
         error.localizedMessage,
         error
@@ -202,7 +202,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       _wollets[id] = Wollet(networkObj, descriptor!!, datadir)
       result.resolve(id)
     } catch (error: Throwable) {
-      return result.reject("Wollet create error", error.localizedMessage, error)
+      result.reject("Wollet create error", error.localizedMessage, error)
     }
   }
 
@@ -312,7 +312,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       _transactions[id] = Transaction(hex)
       result.resolve(id)
     } catch (error: Throwable) {
-      return result.reject("Transaction create error", error.localizedMessage, error)
+      result.reject("Transaction create error", error.localizedMessage, error)
     }
   }
 
@@ -401,7 +401,7 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
       _txBuilders[id] = networkObj.txBuilder()
       result.resolve(id)
     } catch (error: Throwable) {
-      return result.reject("TxBuilder create error", error.localizedMessage, error)
+      result.reject("TxBuilder create error", error.localizedMessage, error)
     }
   }
 
