@@ -155,18 +155,20 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     txId: String,
     result: Promise
   ) {
-    try {
-      val client = _electrumClients[clientId]
-      val transaction = _transactions[txId]
-      val txid = client!!.broadcast(transaction!!)
-      result.resolve(txid.toString())
-    } catch (error: Throwable) {
-      return result.reject(
-        "ElectrumClient broadcast error",
-        error.localizedMessage,
-        error
-      )
-    }
+    Thread {
+      try {
+        val client = _electrumClients[clientId]
+        val transaction = _transactions[txId]
+        val txid = client!!.broadcast(transaction!!)
+        result.resolve(txid.toString())
+      } catch (error: Throwable) {
+        result.reject(
+          "ElectrumClient broadcast error",
+          error.localizedMessage,
+          error
+        )
+      }
+    }.start()
   }
 
   @ReactMethod
@@ -175,15 +177,17 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     clientId: String,
     result: Promise
   ) {
-    try {
-      val id = randomId()
-      val client = _electrumClients[clientId]
-      val wollet = _wollets[wolletId]
-      _updates[id] = client!!.fullScan(wollet!!)!!
-      result.resolve(id)
-    } catch (error: Throwable) {
-      return result.reject("ElectrumClient fullScan error", error.localizedMessage, error)
-    }
+    Thread {
+      try {
+        val id = randomId()
+        val client = _electrumClients[clientId]
+        val wollet = _wollets[wolletId]
+        _updates[id] = client!!.fullScan(wollet!!)!!
+        result.resolve(id)
+      } catch (error: Throwable) {
+        result.reject("ElectrumClient fullScan error", error.localizedMessage, error)
+      }
+    }.start()
   }
 
   /* Wollet */
@@ -212,33 +216,37 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     updateId: String,
     result: Promise
   ) {
-    try {
-      val wollet = _wollets[wolletId]
-      val update = _updates[updateId]
-      wollet!!.applyUpdate(update!!)
-      result.resolve(null)
-    } catch (error: Throwable) {
-      return result.reject("Wollet applyUpdate error", error.localizedMessage, error)
-    }
+    Thread {
+      try {
+        val wollet = _wollets[wolletId]
+        val update = _updates[updateId]
+        wollet!!.applyUpdate(update!!)
+        result.resolve(null)
+      } catch (error: Throwable) {
+        result.reject("Wollet applyUpdate error", error.localizedMessage, error)
+      }
+    }.start()
   }
 
   @ReactMethod
   fun getTransactions(wolletId: String, result: Promise) {
-    try {
-      val wollet = _wollets[wolletId]
-      val list = wollet!!.transactions()
-      val transactions: MutableList<Map<String, Any?>> = mutableListOf()
-      for (item in list) {
-        var txObject = getTransactionObject(item)
-        val randomId = randomId()
-        _walletTxs[randomId] = item
-        txObject["transaction"] = randomId
-        transactions.add(txObject)
+    Thread {
+      try {
+        val wollet = _wollets[wolletId]
+        val list = wollet!!.transactions()
+        val transactions: MutableList<Map<String, Any?>> = mutableListOf()
+        for (item in list) {
+          var txObject = getTransactionObject(item)
+          val randomId = randomId()
+          _walletTxs[randomId] = item
+          txObject["transaction"] = randomId
+          transactions.add(txObject)
+        }
+        result.resolve(Arguments.makeNativeArray(transactions))
+      } catch (error: Throwable) {
+        result.reject("Wollet getTransactions error", error.localizedMessage, error)
       }
-      result.resolve(Arguments.makeNativeArray(transactions))
-    } catch (error: Throwable) {
-      result.reject("Wollet getTransactions error", error.localizedMessage, error)
-    }
+    }.start()
   }
 
   @ReactMethod
@@ -253,24 +261,28 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun getAddress(wolletId: String, index: Dynamic, result: Promise) {
-    try {
-      val wollet = _wollets[wolletId]
-      val address = wollet!!.address(if (index.isNull) null else index.asInt().toUInt()).address()
-      result.resolve(Arguments.makeNativeMap(getAddressObject(address)))
-    } catch (error: Throwable) {
-      result.reject("Wollet getAddress error", error.localizedMessage, error)
-    }
+    Thread {
+      try {
+        val wollet = _wollets[wolletId]
+        val address = wollet!!.address(if (index.isNull) null else index.asInt().toUInt()).address()
+        result.resolve(Arguments.makeNativeMap(getAddressObject(address)))
+      } catch (error: Throwable) {
+        result.reject("Wollet getAddress error", error.localizedMessage, error)
+      }
+    }.start()
   }
 
   @ReactMethod
   fun getBalance(wolletId: String, result: Promise) {
-    try {
-      val wollet = _wollets[wolletId]
-      val balance = wollet!!.balance().mapValues { it.value.toInt() }
-      result.resolve(Arguments.makeNativeMap(balance))
-    } catch (error: Throwable) {
-      result.reject("Wollet getBalance error", error.localizedMessage, error)
-    }
+    Thread {
+      try {
+        val wollet = _wollets[wolletId]
+        val balance = wollet!!.balance().mapValues { it.value.toInt() }
+        result.resolve(Arguments.makeNativeMap(balance))
+      } catch (error: Throwable) {
+        result.reject("Wollet getBalance error", error.localizedMessage, error)
+      }
+    }.start()
   }
 
   @ReactMethod
@@ -288,18 +300,20 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun waitTx(wolletId: String, txid: String, clientId: String, result: Promise) {
-    try {
-      val wollet = _wollets[wolletId]
-      val client = _electrumClients[clientId]
-      val walletTx = wollet!!.waitForTx(Txid(txid), client!!)
-      val id = randomId()
-      _walletTxs[id] = walletTx
-      val txObject = getTransactionObject(walletTx)
-      txObject["transaction"] = id
-      result.resolve(Arguments.makeNativeMap(txObject))
-    } catch (error: Throwable) {
-      result.reject("Wollet waitTx error", error.localizedMessage, error)
-    }
+    Thread {
+      try {
+        val wollet = _wollets[wolletId]
+        val client = _electrumClients[clientId]
+        val walletTx = wollet!!.waitForTx(Txid(txid), client!!)
+        val id = randomId()
+        _walletTxs[id] = walletTx
+        val txObject = getTransactionObject(walletTx)
+        txObject["transaction"] = id
+        result.resolve(Arguments.makeNativeMap(txObject))
+      } catch (error: Throwable) {
+        result.reject("Wollet waitTx error", error.localizedMessage, error)
+      }
+    }.start()
   }
   /* Transaction */
 
