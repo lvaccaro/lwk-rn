@@ -190,18 +190,36 @@ class LwkRnModule: NSObject {
     }
     @objc
     func applyUpdate(_
-                     wolletId: String,
-                     updateId: String,
-                     resolve: RCTPromiseResolveBlock,
-                     reject: RCTPromiseRejectBlock
+        wolletId: String,
+        updateId: String,
+        resolve: RCTPromiseResolveBlock,
+        reject: RCTPromiseRejectBlock
     ) -> Void {
+        guard let wollet = _wollets[wolletId] else {
+            reject("WALLET_NOT_FOUND",
+                   "Wallet with ID \(wolletId) not found",
+                   NSError(domain: "WalletError",
+                          code: -1,
+                          userInfo: ["walletId": wolletId]))
+            return
+        }
+        
+        guard let update = _updates[updateId] else {
+            reject("UPDATE_NOT_FOUND",
+                   "Update with ID \(updateId) not found",
+                   NSError(domain: "UpdateError",
+                          code: -2,
+                          userInfo: ["updateId": updateId]))
+            return
+        }
+        
         do {
-            let wollet = _wollets[wolletId]
-            let update = _updates[updateId]
-            try wollet!.applyUpdate(update: update!)
+            try wollet.applyUpdate(update: update)
             resolve(nil)
         } catch {
-            reject("Wollet applyUpdate error", error.localizedDescription, error)
+            reject("UPDATE_FAILED",
+                   "Failed to apply update: \(error.localizedDescription)",
+                   error)
         }
     }
     
