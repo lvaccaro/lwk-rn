@@ -248,8 +248,7 @@
                       reject:(RCTPromiseRejectBlock)reject
                       )
     RCT_EXTERN_METHOD(
-                      txBuilderFinish: (nonnull NSString)id
-                      wolletId: (nonnull NSString)wolletId
+                      txEnableDiscount: (nonnull NSString)id
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
                       )

@@ -47,13 +47,9 @@ class LwkRnModule: NSObject {
         _ resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock
     ) -> Void {
-        do {
-            let id = randomId()
-            _bips[id] = try Bip.newBip49()
-            resolve(id)
-        } catch {
-            reject("Bip newBip49 error", error.localizedDescription, error)
-        }
+        let id = randomId()
+        _bips[id] = Bip.newBip49()
+        resolve(id)
     }
 
     @objc
@@ -61,13 +57,9 @@ class LwkRnModule: NSObject {
         _ resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock
     ) -> Void {
-        do {
-            let id = randomId()
-            _bips[id] = try Bip.newBip84()
-            resolve(id)
-        } catch {
-            reject("Bip newBip84 error", error.localizedDescription, error)
-        }
+        let id = randomId()
+        _bips[id] = Bip.newBip84()
+        resolve(id)
     }
 
     @objc
@@ -75,13 +67,9 @@ class LwkRnModule: NSObject {
         _ resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock
     ) -> Void {
-        do {
-            let id = randomId()
-            _bips[id] = try Bip.newBip87()
-            resolve(id)
-        } catch {
-            reject("Bip newBip87 error", error.localizedDescription, error)
-        }
+        let id = randomId()
+        _bips[id] = Bip.newBip87()
+        resolve(id)
     }
     
     /* Signer */
@@ -147,7 +135,7 @@ class LwkRnModule: NSObject {
         do {
             let signer = _signers[signerId]
             let bip = _bips[bipId]
-            let res = try signer?.keyoriginXpub(bip)
+            let res = try signer?.keyoriginXpub(bip: bip!)
             resolve(res)
         } catch {
             reject("Signer keyoriginXpub error", error.localizedDescription, error)
@@ -631,6 +619,19 @@ class LwkRnModule: NSObject {
             reject("TxBuilder finish error", error.localizedDescription, error)
         }
     }
+    @objc
+    func txEnableDiscount(_
+                         id: String,
+                         resolve: RCTPromiseResolveBlock,
+                         reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            try _txBuilders[id]?.enableCtDiscount()
+            resolve(nil)
+        } catch {
+            reject("TxBuilder enableCtDiscount error", error.localizedDescription, error)
+        }
+    }
     
     @objc
     func txBuilderIssueAsset(_
@@ -644,7 +645,6 @@ class LwkRnModule: NSObject {
                              reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
-            let txBuilder = _txBuilders[id]
             let contract = contractId != nil ? _contracts[contractId!] : nil
             let assetReceiver = assetReceiver != nil ? try Address(s: assetReceiver!) : nil
             let tokenReceiver = tokenReceiver != nil ? try Address(s: tokenReceiver!) : nil
@@ -666,7 +666,6 @@ class LwkRnModule: NSObject {
                                reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
-            let txBuilder = _txBuilders[id]
             let assetReceiver = assetReceiver != nil ? try Address(s: assetReceiver!) : nil
             let issuanceTx = issuanceTx != nil ? try Transaction(hex: issuanceTx!) : nil
             try _txBuilders[id]?.reissueAsset(assetToReissue: assetToReissue, satoshiToReissue: satoshiToReissue.uint64Value, assetReceiver: assetReceiver, issuanceTx: issuanceTx)
