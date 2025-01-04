@@ -44,7 +44,7 @@ class LwkRnModule: NSObject {
     /* Bip */
     @objc
     func newBip49(
-        resolve: RCTPromiseResolveBlock,
+        _ resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
@@ -58,7 +58,7 @@ class LwkRnModule: NSObject {
 
     @objc
     func newBip84(
-        resolve: RCTPromiseResolveBlock,
+        _ resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
@@ -72,7 +72,7 @@ class LwkRnModule: NSObject {
 
     @objc
     func newBip87(
-        resolve: RCTPromiseResolveBlock,
+        _ resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock
     ) -> Void {
         do {
@@ -140,7 +140,7 @@ class LwkRnModule: NSObject {
     @objc
     func keyoriginXpub(
         _ signerId: String,
-        _ bipId: String,
+        bipId: String,
         resolve: RCTPromiseResolveBlock,
         reject: RCTPromiseRejectBlock
     ) -> Void {
