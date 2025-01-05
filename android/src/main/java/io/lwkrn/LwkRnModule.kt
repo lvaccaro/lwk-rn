@@ -19,6 +19,7 @@ import lwk.Update
 import lwk.WalletTx
 import lwk.Wollet
 import lwk.WolletDescriptor
+import lwk.Bip
 
 class LwkRnModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -161,7 +162,6 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
     result: Promise
   ) {
     try {
-      val id = randomId()
       val signer = _signers[signerId]
       val bip = _bips[bipId]
       val res = signer!!.keyoriginXpub(bip!!)
