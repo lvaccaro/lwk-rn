@@ -1,5 +1,6 @@
-import { Descriptor } from './classes/Descriptor';
+import { Bip } from './classes/Bip';
 import { Client } from './classes/Client';
+import { Descriptor } from './classes/Descriptor';
 import { Wollet } from './classes/Wollet';
 import { Signer } from './classes/Signer';
 import { Pset } from './classes/Pset';
@@ -15,6 +16,7 @@ import {
 import { type ElectrumClientConfig } from './lib/interfaces';
 
 export {
+  Bip,
   Client,
   Descriptor,
   Network,
