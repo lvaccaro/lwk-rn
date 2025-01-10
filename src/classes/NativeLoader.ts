@@ -52,6 +52,7 @@ export interface NativeLwk {
   txAsString(txId: string): string;
 
   // Pset
+  createPset(base64: string): string;
   psetAsString(psetId: string): string;
   psetExtractTx(psetId: string): string;
   psetIssuanceAsset(id: string, index: number): string;

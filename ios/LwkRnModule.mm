@@ -173,6 +173,11 @@
     
     /** Pset Methods */
     RCT_EXTERN_METHOD(
+                      createPset: (nonnull NSString)base64
+                      resolve: (RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+                      )
+    RCT_EXTERN_METHOD(
                       psetAsString: (nonnull NSString)psetId
                       resolve: (RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject

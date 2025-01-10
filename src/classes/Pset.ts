@@ -9,6 +9,11 @@ export class Pset extends NativeLoader {
     return this;
   }
 
+  async create(base64: string): Promise<Pset> {
+    this.id = await this._lwk.createPset(base64);
+    return this;
+  }
+
   async extractTx(): Promise<Transaction> {
     let id = await this._lwk.psetExtractTx(this.id);
     return new Transaction().from(id);

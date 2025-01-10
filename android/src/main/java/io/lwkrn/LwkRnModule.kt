@@ -452,6 +452,17 @@ class LwkRnModule(reactContext: ReactApplicationContext) :
   /* Pset */
 
   @ReactMethod
+  fun createPset(base64: String, result: Promise) {
+    try {
+      val id = randomId()
+      _psets[id] = Pset(base64)
+      result.resolve(id)
+    } catch (error: Throwable) {
+      result.reject("Pset createPset error", error.localizedMessage, error)
+    }
+  }
+
+  @ReactMethod
   fun psetAsString(psetId: String, result: Promise) {
     try {
       val pset = _psets[psetId]

@@ -457,6 +457,20 @@ class LwkRnModule: NSObject {
     
     /* Pset */
     @objc
+    func createPset(_
+                      base64: String,
+                      resolve: RCTPromiseResolveBlock,
+                      reject: RCTPromiseRejectBlock
+    ) -> Void {
+        do {
+            let id = randomId()
+            _psets[id] = try Pset(base64: base64)
+            resolve(id)
+        } catch {
+            reject("Pset createPset error", error.localizedDescription, error)
+        }
+    }
+    @objc
     func psetAsString(_
                       psetId: String,
                       resolve: RCTPromiseResolveBlock,
