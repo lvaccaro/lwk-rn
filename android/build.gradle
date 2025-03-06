@@ -29,7 +29,7 @@ android {
   compileSdkVersion safeExtGet('compileSdkVersion', 34)
   namespace 'io.lwkrn'
   defaultConfig {
-    minSdkVersion safeExtGet('minSdkVersion', 34)
+    minSdkVersion safeExtGet('minSdkVersion', 24)
     targetSdkVersion safeExtGet('targetSdkVersion', 34)
   }
   compileOptions {

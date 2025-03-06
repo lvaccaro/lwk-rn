@@ -30,6 +30,8 @@ or
 cd ios && pod install
 ```
 
+Note: Use android sdk version >= 23 and iOS >= v13 .
+
 ### Examples
 
 You could run the example in iOS or android by the following
