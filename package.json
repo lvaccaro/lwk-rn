@@ -1,6 +1,6 @@
 {
   "name": "lwk-rn",
-  "version": "0.1.0",
+  "version": "0.9.0",
   "description": "Liquid Wallet Kit react native module",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
@@ -37,6 +37,10 @@
     "!**/.*"
   ],
   "scripts": {
+    "ubrn:ios": "ubrn build ios     --config ubrn.config.yaml --and-generate && (cd example/ios && pod install)",
+    "ubrn:android": "ubrn build android --config ubrn.config.yaml --and-generate",
+    "ubrn:checkout": "ubrn checkout      --config ubrn.config.yaml",
+    "ubrn:clean": "rm -Rf cpp/ android/src/main/java ios/ src/Native* src/generated/ src/index.ts*",
     "example": "yarn workspace lwk-rn-example",
     "test": "jest",
     "typecheck": "tsc",
@@ -198,6 +202,9 @@
   "create-react-native-library": {
     "type": "turbo-module",
     "languages": "cpp",
-    "version": "0.48.3"
+    "version": "0.45.5"
+  },
+  "dependencies": {
+    "uniffi-bindgen-react-native": "^0.28.3-1"
   }
 }
