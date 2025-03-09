@@ -2,7 +2,7 @@
 
 **LWK-rn** is a React Native module for [Liquid Wallet Kit](https://github.com/Blockstream/lwk). Its goal is to provide all the necessary building blocks for mobile development of a liquid wallet.
 
-** NOTE: LWK and LWK-rn is in public beta and still undergoing significant development. Use it at your own risk. **
+**NOTE: LWK and LWK-rn is in public beta and still undergoing significant development. Use it at your own risk.**
 
 _Please consider reviewing, experimenting and contributing_
 
