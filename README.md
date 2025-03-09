@@ -79,6 +79,60 @@ for (var tx of txs) {
 }
 ```
 
+## Build
+
+LWK-rn repository contains the pre-generated lwk bindings for android and ios. 
+
+Follow the steps to generate bindings by your own:
+
+Install C++ tooling
+
+```sh
+# For MacOS, using homebrew:
+brew install cmake ninja clang-format
+# For Debian flavoured Linux:
+apt-get install cmake ninja clang-format
+```
+
+Add the Android specific targets
+```sh
+rustup target add \
+    aarch64-linux-android \
+    armv7-linux-androideabi \
+    i686-linux-android \
+    x86_64-linux-android
+# Install cargo-ndk
+cargo install cargo-ndk
+```
+
+Add the iOS specific targets
+```sh
+rustup target add \
+    aarch64-apple-ios \
+    aarch64-apple-ios-sim \
+    x86_64-apple-ios
+# Ensure xcodebuild is available
+xcode-select --install
+```
+
+Install deps and `uniffi-bindgen-react-native`.
+
+```sh
+$ yarn install
+```
+
+Fetch LWK library with some hacks.
+> The script changes path to avoid using workspace configuration and rust version. The project require rust >= v1.18 . The scipt replacing package name in `Cargo.toml` for a library name bug in `uniffi-bindgen-react-native`.
+```sh
+$ sh fetch_lwk.sh
+```
+
+Generate bindings for android and ios:
+```sh
+$ yarn ubrn:android
+$ yarn ubrn:ios
+```
+
 ## Example
 
 Open demo application in `./example/` folder and read the code in `./example/src/App.tsx` .
