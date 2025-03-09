@@ -26,5 +26,7 @@
     "strict": true,
     "target": "ESNext",
     "verbatimModuleSyntax": true
-  }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["android/", "cpp/generated/", "ios/", "lib/", "node_modules", "src/generated/"]
 }
