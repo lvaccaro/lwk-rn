@@ -100,6 +100,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Fetch LWK
+        run: ./fetch_lwk.sh
+
       - name: Build example for Android
         env:
           JAVA_OPTS: "-XX:MaxHeapSize=6g"
@@ -159,6 +162,9 @@ jobs:
           path: |
             **/ios/Pods
           key: ${{ steps.cocoapods-cache.outputs.cache-key }}
+      
+      - name: Fetch LWK
+        run: ./fetch_lwk.sh
 
       - name: Build example for iOS
         run: |
