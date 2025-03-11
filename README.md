@@ -1,11 +1,12 @@
-# lwk-rn
+# Liquid Wallet Kit - react native
 
-Liquid Wallet Kit react native module
+**LWK-rn** is a React Native module for [Liquid Wallet Kit](https://github.com/Blockstream/lwk). Its goal is to provide all the necessary building blocks for mobile development of a liquid wallet.
 
-_Note: Caution this is an Alpha at this stage
-Please consider reviewing, experimenting and contributing ⚡️_
+** NOTE: LWK and LWK-rn is in public beta and still undergoing significant development. Use it at your own risk. **
 
-Thanks for taking a look!
+_Please consider reviewing, experimenting and contributing_
+
+_Thanks for taking a look!_
 
 ## Installation
 
@@ -21,13 +22,15 @@ Using yarn:
 yarn add lwk-rn
 ```
 
-[IOS Only] Install pods:
+[iOS Only] Install pods:
 
 ```bash
 npx pod-install
 or
 cd ios && pod install
 ```
+
+Note: Use android sdk version >= 23 and iOS >= v13 .
 
 ### Examples
 
@@ -64,8 +67,8 @@ console.log(address);
 
 Get a transaction list:
 ```js
-const address = await wollet.getTransactions();
-console.log(address);
+const transactions = await wollet.getTransactions();
+console.log(transactions);
 ```
 
 Get balance as `[AssetId : UInt64]`:
@@ -87,7 +90,7 @@ Build, sign and broadcast a Transaction:
     let finalized_pset = await wollet.finalize(signed_pset);
     const tx = await finalized_pset.extractTx();
     await client.broadcast(tx);
-    console.log("BROADCASTED TX!\nTXID: {:?}", tx.txId.toString());
+    console.log("BROADCASTED TX!\nTXID: {:?}", (await tx.txId.toString()));
 ```
 ## Contributing
 
