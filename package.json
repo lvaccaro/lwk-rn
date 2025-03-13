@@ -1,6 +1,6 @@
 {
   "name": "lwk-rn",
-  "version": "0.8.2-1",
+  "version": "0.9.0",
   "description": "Liquid Wallet Kit react native module",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
@@ -8,11 +8,11 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./lib/typescript/module/src/index.d.ts",
+        "types": "./lib/typescript/module/src/NativeLwkRn.d.ts",
         "default": "./lib/module/index.js"
       },
       "require": {
-        "types": "./lib/typescript/commonjs/src/index.d.ts",
+        "types": "./lib/typescript/commonjs/src/NativeLwkRn.d.ts",
         "default": "./lib/commonjs/index.js"
       }
     }
@@ -22,8 +22,10 @@
     "lib",
     "android",
     "ios",
+    "LwkRnFramework.xcframework",
     "cpp",
     "*.podspec",
+    "react-native.config.js",
     "!ios/build",
     "!android/build",
     "!android/gradle",
@@ -36,6 +38,10 @@
     "!**/.*"
   ],
   "scripts": {
+    "ubrn:ios": "ubrn build ios     --config ubrn.config.yaml --and-generate && (cd example/ios && pod install)",
+    "ubrn:android": "ubrn build android --config ubrn.config.yaml --and-generate",
+    "ubrn:checkout": "ubrn checkout      --config ubrn.config.yaml",
+    "ubrn:clean": "rm -Rf cpp/ android/src/main/java ios/ src/Native* src/generated/ src/index.ts*",
     "example": "yarn workspace lwk-rn-example",
     "test": "jest",
     "typecheck": "tsc",
@@ -51,22 +57,23 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Blockstream/lwk-rn.git"
+    "url": "git+https://github.com/lvaccaro/lwk-rn.git"
   },
-  "author": "Luca Vaccaro <me@lvaccaro.com> (https://github.com/lvaccaro)",
+  "author": "lvaccaro <me@lvaccaro.com> (https://github.com/lvaccaro)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Blockstream/lwk-rn/issues"
+    "url": "https://github.com/lvaccaro/lwk-rn/issues"
   },
-  "homepage": "https://github.com/Blockstream/lwk-rn#readme",
+  "homepage": "https://github.com/lvaccaro/lwk-rn#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.5.0",
+    "@react-native-community/cli": "15.0.1",
     "@react-native/eslint-config": "^0.73.1",
-    "@release-it/conventional-changelog": "^5.0.0",
+    "@release-it/conventional-changelog": "^9.0.2",
     "@types/jest": "^29.5.5",
     "@types/react": "^18.2.44",
     "commitlint": "^17.0.2",
@@ -76,10 +83,10 @@
     "eslint-plugin-prettier": "^5.0.1",
     "jest": "^29.7.0",
     "prettier": "^3.0.3",
-    "react": "18.3.1",
-    "react-native": "0.75.2",
-    "react-native-builder-bob": "^0.30.0",
-    "release-it": "^15.0.0",
+    "react": "19.0.0",
+    "react-native": "0.78.0",
+    "react-native-builder-bob": "^0.36.0",
+    "release-it": "^17.10.0",
     "turbo": "^1.10.7",
     "typescript": "^5.2.2"
   },
@@ -90,9 +97,6 @@
     "react": "*",
     "react-native": "*"
   },
-  "workspaces": [
-    "example"
-  ],
   "packageManager": "yarn@3.6.1",
   "jest": {
     "preset": "react-native",
@@ -158,6 +162,7 @@
     "source": "src",
     "output": "lib",
     "targets": [
+      "codegen",
       [
         "commonjs",
         {
@@ -179,9 +184,25 @@
       ]
     ]
   },
+  "codegenConfig": {
+    "name": "RNLwkRnSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "outputDir": {
+      "ios": "ios/generated",
+      "android": "android/generated"
+    },
+    "android": {
+      "javaPackageName": "com.lwkrn"
+    },
+    "includesGeneratedCode": true
+  },
   "create-react-native-library": {
-    "type": "module-legacy",
-    "languages": "kotlin-swift",
-    "version": "0.41.0"
+    "type": "turbo-module",
+    "languages": "cpp",
+    "version": "0.45.5"
+  },
+  "dependencies": {
+    "uniffi-bindgen-react-native": "^0.28.3-1"
   }
 }
