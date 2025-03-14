@@ -21,6 +21,7 @@
     "src",
     "lib",
     "ios",
+    "LwkRnFramework.xcframework",
     "cpp",
     "*.podspec",
     "react-native.config.js",
