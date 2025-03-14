@@ -59,14 +59,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lvaccaro/lwk-rn.git"
+    "url": "git+https://github.com/Blockstream/lwk-rn.git"
   },
   "author": "lvaccaro <me@lvaccaro.com> (https://github.com/lvaccaro)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lvaccaro/lwk-rn/issues"
+    "url": "https://github.com/Blockstream/lwk-rn/issues"
   },
-  "homepage": "https://github.com/lvaccaro/lwk-rn#readme",
+  "homepage": "https://github.com/Blockstream/lwk-rn#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
