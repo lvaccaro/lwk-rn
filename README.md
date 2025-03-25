@@ -79,6 +79,54 @@ for (var tx of txs) {
 }
 ```
 
+Build, sign, finalize and broadcast a transaction of policy asset 
+```js
+let latest_address = wollet.address(undefined);
+let out_address = latest_address.address();
+let satoshis = 900n;
+let fee_rate = 280; // this seems like absolute fees
+let builder = network.txBuilder();
+builder.addLbtcRecipient(out_address, satoshis);
+builder.feeRate(fee_rate);
+let pset = builder.finish(wollet);
+let signed_pset = signer.sign(pset);
+let finalized_pset = wollet.finalize(signed_pset);
+let txid = client
+    .broadcast(finalized_pset.extractTx());
+console.log("BROADCASTED TX!\nTXID: ", txid);
+```
+
+Build, sign, finalize and broadcast a transaction of liquid asset 
+```js
+let latest_address = wollet.address(undefined);
+let out_address = latest_address.address();
+let satoshis = 900n;
+let fee_rate = 280; // this seems like absolute fees
+let builder = network.txBuilder();
+builder.addLbtcRecipient(out_address, satoshis);
+builder.feeRate(fee_rate);
+// sign and send
+let pset = builder.finish(wollet);
+let signed_pset = signer.sign(pset);
+let finalized_pset = wollet.finalize(signed_pset);
+let txid = client.broadcast(finalized_pset.extractTx());
+console.log("BROADCASTED TX!\nTXID: ", txid.toString());
+```
+
+Build, sign, finalize and broadcast a transaction of liquid asset 
+```js
+let builder = network.txBuilder();
+let asset = '0f1040289a4e88e6acef89b65ce4847b6fd68ac39b89fa978bf23e2c039f5e27';
+builder.addRecipient(out_address, 100n, asset);
+builder.feeRate(fee_rate);
+let pset = builder.finish(wollet);
+let signed_pset = signer.sign(pset);
+let finalized_pset = wollet.finalize(signed_pset);
+let txid = client.broadcast(finalized_pset.extractTx());
+console.log("BROADCASTED TX!\nTXID: ", txid.toString());
+```
+
+
 ## Build
 
 LWK-rn repository contains the pre-generated lwk bindings for android and ios. 
