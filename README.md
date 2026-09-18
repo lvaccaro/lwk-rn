@@ -170,7 +170,7 @@ $ yarn install
 ```
 
 Fetch LWK library with some hacks.
-> The script changes path to avoid using workspace configuration and rust version. The project require rust >= v1.18 . The scipt replacing package name in `Cargo.toml` for a library name bug in `uniffi-bindgen-react-native`.
+> The script pins Blockstream/lwk to a specific commit (currently the peel of signed tag `bindings_0.18.0`) and refuses to build if that tag is moved. It also changes path to avoid using workspace configuration and rust version. The project require rust >= v1.18 . The scipt replacing package name in `Cargo.toml` for a library name bug in `uniffi-bindgen-react-native`.
 ```sh
 $ sh fetch_lwk.sh
 ```

@@ -20,7 +20,7 @@ jobs:
         - name: Install NDK
           run: cargo install cargo-ndk
         
-        - name: Fetch LWK
+        - name: Fetch and verify LWK
           run: sh fetch_lwk.sh
 
         - name: Generate android lib
@@ -46,7 +46,7 @@ jobs:
           with:
             targets: x86_64-apple-ios,aarch64-apple-ios,aarch64-apple-ios-sim
         
-        - name: Fetch LWK
+        - name: Fetch and verify LWK
           run: sh fetch_lwk.sh
 
         - name: Generate ios lib
