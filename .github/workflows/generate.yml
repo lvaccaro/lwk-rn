@@ -2,24 +2,29 @@ name: CI Generate
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
     build-android:
       runs-on: ubuntu-latest
       steps:
         - name: Checkout
-          uses: actions/checkout@v4
-  
+          uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+          with:
+            persist-credentials: false
+
         - name: Setup
           uses: ./.github/actions/setup
 
         - name: Setup rust toolchain
-          uses: dtolnay/rust-toolchain@1.85.0
+          uses: dtolnay/rust-toolchain@3230091d7ef9483f601620abacc570c22cf44d22 # 1.85.0
           with:
             targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
-        
+
         - name: Install NDK
           run: cargo install cargo-ndk
-        
+
         - name: Fetch and verify LWK
           run: sh fetch_lwk.sh
 
@@ -27,7 +32,7 @@ jobs:
           run: yarn ubrn:android --profile release-smaller
 
         - name: Temporarily save artifact
-          uses: actions/upload-artifact@v4
+          uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
           with:
             name: lwk-android-artifact
             path: android
@@ -36,16 +41,18 @@ jobs:
       runs-on: macos-14
       steps:
         - name: Checkout
-          uses: actions/checkout@v4
-  
+          uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+          with:
+            persist-credentials: false
+
         - name: Setup
           uses: ./.github/actions/setup
 
         - name: Setup rust toolchain
-          uses: dtolnay/rust-toolchain@1.85.0
+          uses: dtolnay/rust-toolchain@3230091d7ef9483f601620abacc570c22cf44d22 # 1.85.0
           with:
             targets: x86_64-apple-ios,aarch64-apple-ios,aarch64-apple-ios-sim
-        
+
         - name: Fetch and verify LWK
           run: sh fetch_lwk.sh
 
@@ -54,11 +61,11 @@ jobs:
 
         - name: Strip ios lib
           run: |
-            strip LwkRnFramework.xcframework/ios-arm64/liblwk.a |
+            strip LwkRnFramework.xcframework/ios-arm64/liblwk.a
             strip LwkRnFramework.xcframework/ios-arm64-simulator/liblwk.a
 
         - name: Temporarily save artifact
-          uses: actions/upload-artifact@v4
+          uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
           with:
             name: lwk-ios-artifact
             path: LwkRnFramework.xcframework
