@@ -46,7 +46,8 @@ console.log("address:", out_address.toString());
 
 // Build, sign, finalize and broadcast a transaction of policy asset
 let satoshis = 900n;
-let fee_rate = 280; // this seems like absolute fees
+// LWK fee rate is sats/kvB. 100 sats/kvB = 0.1 sat/vB (multiply sat/vB by 1000).
+let fee_rate = 100;
 
 let builder = network.txBuilder();
 builder.addLbtcRecipient(out_address, satoshis);

@@ -4997,7 +4997,8 @@ export interface TxBuilderInterface {
    */
   drainLbtcWallet() /*throws*/ : void;
   /**
-   * Set the fee rate
+   * Set the fee rate in sats/kvB.
+   * Multiply a sat/vB value by 1000 (1.0 sat/vB = 1000.0 sats/kvB).
    */
   feeRate(rate: /*f32*/ number | undefined) /*throws*/ : void;
   /**
@@ -5164,7 +5165,8 @@ export class TxBuilder
   }
 
   /**
-   * Set the fee rate
+   * Set the fee rate in sats/kvB.
+   * Multiply a sat/vB value by 1000 (1.0 sat/vB = 1000.0 sats/kvB).
    */
   public feeRate(rate: /*f32*/ number | undefined): void /*throws*/ {
     uniffiCaller.rustCallWithError(
